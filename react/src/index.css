@@ -1,0 +1,12 @@
+/* main.css */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+.dark .main-title {
+    background: linear-gradient(to right, #d000ff, #5d00ff); 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; 
+}
+
