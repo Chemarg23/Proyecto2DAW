@@ -1,13 +1,15 @@
 import axios from "axios";
 import { store } from "../store/store";
 
+export const baseUrl = 'http://localhost:8080/api/'
+
 export default class Service {
   
   api;
 
   constructor(endpoint = "") {
     this.api = axios.create({
-      baseURL: `http://localhost:8080/${endpoint}`,
+      baseURL: `${baseUrl}${endpoint}`,
     });
 
     this.api.interceptors.request.use((config) => {

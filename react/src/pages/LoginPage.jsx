@@ -1,8 +1,9 @@
+import { Button } from "@material-tailwind/react";
 import { Form, Formik } from "formik";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import Header from "../Layouts/Header";
+import Header from "../Layouts/AdminHeader";
 import "../assets/login.css";
 import InputCheck from "../components/InputCheck";
 import InputText from "../components/InputText";
@@ -31,8 +32,9 @@ export default function LoginPage() {
     service
       .login(value)
       .then((response) => {
-        dispatch(addUser(response.data));
-        navigate("/");
+        const data = {...response.data, date: Date.now()};
+        dispatch(addUser(data));
+        navigate("/main") 
       })
       .catch((err) => {
         const status = err.response.status;
@@ -46,7 +48,7 @@ export default function LoginPage() {
       <Header />
       <div className="font-[sans-serif] bg-gray-50 text-[#333] dark:bg-gray-800 dark:text-white">
         <div className="min-h-screen flex flex-col items-center justify-center ">
-          <div className="grid md:grid-cols-2 items-center  max-w-6xl w-full p-4 m-4 shadow-2xl dark:shadow-purple-950 rounded-md dark:bg-gray-900 bg-white sm:align-middle sm:justify-center">
+          <div className="grid md:grid-cols-2 items-center  max-w-6xl w-full p-4 m-4 shadow-2xl dark:shadow-purple-950 rounded-md dark:bg-gray-900 bg-white sm:align-middle sm:justify-center sm:h-screen">
             <div className="md:max-w-md sm:px-6 py-4 ml- lg:w-[100%] md:w-[200%] sm:w-[100%] ">
               <Formik
                 initialValues={{
@@ -65,12 +67,11 @@ export default function LoginPage() {
                       </h1>
                       <p className="text-sm mt-4 ">
                         No tienes una cuenta?
-                        <a
-                          href=""
+                        <Link to={"/register"}
                           className="dark:text-purple-600 text-blue-600 font-semibold hover:underline ml-1 whitespace-nowrap"
                         >
                           Registrate aquí
-                        </a>
+                        </Link>
                       </p>
                     </div>
                     <div className="ml-6">
@@ -95,7 +96,6 @@ export default function LoginPage() {
                         <InputCheck label="Recuerdame" name="remember" />
                         <div>
                           <a
-                            href="jajvascript:void(0);"
                             className="dark:text-purple-600 text-blue-600 font-semibold text-sm hover:underline"
                           >
                             Olvidaste tu contraseña?
@@ -103,36 +103,37 @@ export default function LoginPage() {
                         </div>
                       </div>
                       <div className="mt-12">
-                        <button
+                        <Button
                           type="submit"
                           className="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 focus:outline-none dark:bg-purple-600 dark:hover:bg-purple-700"
                         >
                           Iniciar Sesión
-                        </button>
+                        </Button>
                       </div>
                     </div>
                     <p className="my-8 text-sm text-gray-400 text-center">
                       o continua con
                     </p>
                     <div className="space-x-8 flex justify-center">
-                      <button
+                      <Button
                         type="button"
-                        className="border-none outline-none"
+                        className="border-none outline-none rounded-full py-0"
                       >
                         <GoogleIcon />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
-                        className="border-none outline-none"
+                        className="border-none outline-none py-0 rounded-full"
                       >
                         <AppleIcon />
-                      </button>
-                      <button
+                      </Button>
+                      <Button
                         type="button"
-                        className="border-none outline-none"
+                        
+                        className="border-none outline-none py-0 rounded-full"
                       >
                         <FacebookIcon />
-                      </button>
+                      </Button>
                     </div>
                   </Form>
                 )}

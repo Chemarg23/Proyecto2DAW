@@ -13,8 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.app.Application;
+import com.app.application.ports.services.UserService;
 import com.app.dto.user.GetUserDTO;
-import com.app.services.users.UserService;
 
 @SpringBootTest(classes = Application.class)
 @AutoConfigureMockMvc
@@ -28,12 +28,11 @@ class UserControllerTest {
 
     @Test
     void testGetUserById() throws Exception {
-        GetUserDTO mockUserDTO = new GetUserDTO(1L, "John Doe", "john@example.com", "1234567890", 0, "2022-03-16",
-                null);
-        when(userService.get(1L)).thenReturn(mockUserDTO);
+        GetUserDTO mockUserDTO = new GetUserDTO(24L, "John Doe", "john@example.com", "1234567890", 0, "2022-03-16",
+                null,"");
+        when(userService.get(24L)).thenReturn(mockUserDTO);
 
-        mockMvc.perform(get("/users/1"))
-                .andExpect(status().isOk())
+        mockMvc.perform(get("/api/users/24"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(mockUserDTO.getId()))
                 .andExpect(jsonPath("$.name").value(mockUserDTO.getName()))

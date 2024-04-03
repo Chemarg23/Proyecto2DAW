@@ -1,7 +1,5 @@
 package com.app.dto.auth;
 
-import org.hibernate.validator.constraints.Length;
-
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -9,23 +7,32 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 /**
- * DTO utilizado para representar las credenciales de un usuario
+ * Clase que representa las credenciales de inicio de sesión de un usuario.
  */
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 public class Credentials {
     
-    @Email(message = "Este email no es válido")
+    /**
+     * El correo electrónico del usuario.
+     */
+    @Email(message = "Este campo no es un email válido")
     @NotBlank(message = "Este campo es obligatorio")
     private String email;
 
+    /**
+     * La contraseña del usuario.
+     */
     @NotBlank(message = "Este campo es obligatorio")
-    @Length(max =20,message = "Demasiado larga")
-    @Length(min =8, message = "Demasiado corta")
     private String password;
 
-    private Boolean remember = false;
+    /**
+     * Indica si se debe recordar la sesión del usuario.
+     */
+    private Boolean remember;
 }
+

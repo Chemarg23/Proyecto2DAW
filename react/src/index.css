@@ -5,8 +5,158 @@
 
 
 .dark .main-title {
-    background: linear-gradient(to right, #d000ff, #5d00ff); 
+    background: linear-gradient(to right, #d000ff, #5d00ff);
     -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; 
+    -webkit-text-fill-color: transparent;
 }
+.dark.rdt_Pagination{
+  background-color: #3b82f6;
+}
+.dark .episode-list:hover .episode-list:not(:hover) {
+    opacity: 0.5;
+    animation: opacity 0.3s ease;
+}
+
+.light .episode-list:hover .episode-list:not(:hover) {
+    filter: brightness(0.6); 
+    animation: filter 0.5s ease;
+}
+
+
+
+.dark .serie-container {
+    mask-image: linear-gradient(to left, black 0%, transparent);
+    box-shadow: 0 0 1000px black; 
+
+}
+
+.light .serie-container {
+    mask-image: linear-gradient(to left, rgb(208 208 208 / 1) 0%, transparent);
+    box-shadow: 0 0 1000px rgb(194 194 194 / 1); 
+
+}
+
+.category{
+    text-transform: capitalize;
+    color: rgb(222, 214, 214);
+}
+
+.search-container {
+    position: relative;
+    display: inline-block;
+  }
+  
+  
+.light .search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0px; /* Ajusta la posición del icono según sea necesario */
+    color: #000000; /* Color del icono */
+  }
+  
+
+.dark .search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0px; /* Ajusta la posición del icono según sea necesario */
+    color: #ffffff; /* Color del icono */
+  }
+  
+
+  .pagination-container {
+    display: flex;
+    width: 100%;
+
+    justify-content: center;
+  }
+  
+  .pagination {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pagination li {
+    margin: 0 5px;
+  }
+  
+  .pagination a {
+    padding: 5px 10px;
+    text-decoration: none;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .pagination a.active {
+    background-color: #ccc;
+  }
+
+.dark .pagination a{
+  
+  background-color: rgb(126 34 206 )
+}
+
+
+.dark .pagination a:hover{
+  background-color: rgb(147 51 234);;
+}
+
+.light .pagination a{
+  background-color: #3b82f6 ;
+}
+
+
+.light .pagination a:hover{
+  background-color: #2563eb;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.message {
+  animation: slideIn 0.2s ease-out;
+}
+@keyframes slide-down {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(10);
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.3s ease-out;
+}
+
+/* CSS */
+.message-enter {
+  opacity: 0.01;
+}
+
+.message-enter-active {
+  opacity: 1;
+  animation: slideIn 500ms ease-in;
+}
+
+.message-exit {
+  opacity: 1;
+}
+
+.message-exit-active {
+  opacity: 0.01;
+  animation: slideIn 500ms ease-out;
+}
+
 

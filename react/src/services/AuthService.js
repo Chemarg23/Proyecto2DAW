@@ -13,8 +13,7 @@ export default class AuthService extends Service {
   }
 
   async register(data) {
-    return this.api.post('/users/register',data);
-    
+    return this.api.post('/auth/register',data);
   }
 
 

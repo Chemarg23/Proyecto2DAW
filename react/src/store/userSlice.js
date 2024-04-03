@@ -1,51 +1,83 @@
 import { createSlice } from "@reduxjs/toolkit";
-import AuthService from "../services/AuthService";
-
+import WishListService from "../services/WishListService";
+const service = new WishListService();
 export const userSlice = createSlice({
   name: "user",
   initialState: {
+    id: "",
     name: "",
     token: "",
     auth: false,
     email: "",
     createdAt: "",
-    dischargeDate:"",
+    dischargeDate: "",
     rol: 0,
-    phone:"",
-    loading: false,
-    error: null,
+    phone: "",
+    date: "",
+    series: [],
+    imgPath: "",
   },
   reducers: {
     addUser: (state, action) => {
-      const { name, token, email, createdAt, rol,dischargeDate,phone  } = action.payload;
+      const {
+        id,
+        name,
+        token,
+        email,
+        createdAt,
+        rol,
+        dischargeDate,
+        phone,
+        date,
+        series,
+        imgPath,
+      } = action.payload;
+      state.id = id;
       state.name = name;
       state.token = token;
       state.auth = true;
       state.email = email;
       state.createdAt = createdAt;
       state.rol = rol;
-      state.phone = phone
-      state.dischargeDate = dischargeDate
+      state.phone = phone;
+      state.dischargeDate = dischargeDate;
+      state.date = date;
+      state.series = series;
+      state.imgPath = imgPath ? imgPath : "default.png";
     },
-    changeEmail: (state, action) => {
-      state.email = action.payload;
+    updateUser: (state, action) => {
+      const { name, email, phone, imgPath } = action.payload;
+      state.name = name;
+      state.email = email;
+      state.phone = phone;
+      state.imgPath = imgPath ? imgPath : "default.png";
     },
-    setLoading: (state, action) => {
-      state.loading = action.payload;
+    clear(state) {
+      state.id = "";
+      state.name = "";
+      state.token = "";
+      state.auth = false;
+      state.email = "";
+      state.createdAt = "";
+      state.rol = 0;
+      state.phone = "";
+      state.dischargeDate = "";
+      state.series = [];
+      state.imgPath = "";
     },
-    setError: (state, action) => {
-      state.error = action.payload;
+    addToList(state, action) {
+      state.series.unshift(action.payload);
+      service.add(state.id, action.payload.id);
+    },
+    removeFromList(state, action) {
+      state.series = state.series.filter(
+        (serie) => serie.id !== action.payload.id
+      );
+      service.delete(state.id, action.payload.id);
     },
   },
 });
 
-export const { addUser, changeEmail, setLoading, setError } = userSlice.actions;
-
-export const login = (credentials) => async (dispatch) => {
-  dispatch(setLoading(true));
-  const service = new AuthService();
-  const user = await service.userLogin(credentials);
-  dispatch(addUser(user));
-};
+export const { addUser, clear, addToList, removeFromList, updateUser } = userSlice.actions;
 
 export default userSlice.reducer;

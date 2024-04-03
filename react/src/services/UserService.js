@@ -12,12 +12,12 @@ export default class UserService extends Service {
   }
 
   async getAllUsers() {
-    const response = await this.api.get('/');
+    const response = await this.api.get();
     return response.data;
   }
 
   async add(userData) {
-    const response = await this.api.post('/', userData);
+    const response = await this.api.post('', userData);
     return response.data;
   }
 
@@ -27,7 +27,8 @@ export default class UserService extends Service {
   }
 
   async delete(id) {
-    const response = await this.api.delete(`/${id}`);
-    return response.data;  
+    await this.api.delete(`/${id}`);
   }
+
+  
 }

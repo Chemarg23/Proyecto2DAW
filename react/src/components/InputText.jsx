@@ -3,6 +3,9 @@ import { PropTypes } from "prop-types";
 import EnvelopeIcon from "./icons/EnvelopeIcon";
 import ExclamationIcon from "./icons/ExclamationIcon";
 import EyeIcon from "./icons/EyeIcon";
+import PhoneIcon from "./icons/PhoneIcon";
+import UserIcon from "./icons/UserIcon";
+
 export default function InputText({
   label,
   name,
@@ -11,7 +14,7 @@ export default function InputText({
   type = "text",
 }) {
   const showPassword = () => {
-    const input = document.getElementsByName("password")[0];
+    const input = document.getElementsByName(name)[0];
     input.type = input.type === "password" ? "text" : "password";
   };
   return (
@@ -21,11 +24,14 @@ export default function InputText({
         <Field
           name={name}
           type={type}
-          required
           className="w-full text-sm bg-transparent border-b border-gray-300 focus:border-[#333] px-2 py-3 outline-none dark:border-white dark:focus:border-white"
           placeholder={placeholder}
         />
         {icon === "envelope" && <EnvelopeIcon />}
+        {icon === "phone" && <PhoneIcon/>}
+        {icon === "user" && <UserIcon/>}
+        {icon === "serie" && <i className="bi bi-badge-hd bg-purple-700"></i>}
+
         {icon === "eye" && (
           <div onClick={showPassword}>
             <EyeIcon />

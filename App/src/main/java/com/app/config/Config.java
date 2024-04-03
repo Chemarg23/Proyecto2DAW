@@ -5,15 +5,24 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import com.app.exceptions.RestExceptionHandler;
+import com.app.web.RestExceptionHandler;
 
 /**
  * Clase de configuración que define los beans necesarios para la aplicación.
  */
 @Configuration
-public class Config {
+public class Config implements WebMvcConfigurer{
 
+     @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*");
+    }
     /**
      * Bean que proporciona una instancia de ModelMapper para mapear objetos entre diferentes tipos.
      * @return Instancia de ModelMapper.

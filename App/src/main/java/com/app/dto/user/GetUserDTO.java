@@ -35,4 +35,6 @@ public class GetUserDTO {
     private String createdAt = LocalDate.now().toString();
 
     private LocalDate dischargeDate = null;
+
+    private String imgPath = "default.png";
 }
