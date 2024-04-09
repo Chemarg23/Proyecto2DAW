@@ -41,7 +41,7 @@ export default function FollowButton({ serie }) {
           className="dark:text-purple-500 text-lg font-semibold dark:hover:text-purple-400 dark:hover:border-purple-400  dark:border-purple-500 text-blue-500 border-blue-500 hover:shadow-md dark:hover:shadow-purple-500 hover:shadow-blue-500  rounded-xl px-3 py-2 border-2 bg-transparent"
           color=''
         >
-          {!loading ? <i className="bi bi-suit-heart me-3"></i> : <i className="fa-solid fa-spinner fa-spin me-3"></i>}Seguir
+          {!loading ? <i className="bi bi-suit-heart-fill me-3"></i> : <i className="fa-solid fa-spinner fa-spin me-3"></i>}Seguir
         </Button>
       )}
       {isInList && (

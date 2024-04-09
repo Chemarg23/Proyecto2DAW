@@ -15,15 +15,36 @@ export default class SerieService extends Service {
   }
 
   async add(data) {
+    const search = data.name.trim().replace(/\s/g, "-")
     const catId = [];
     data.categories.forEach(element => catId.push(element.id));
     const formData = new FormData();
-    formData.append("imgPath", data.imgPath);
+    formData.append("img", data.img);
     formData.append("descr", data.descr);
     formData.append("categories", catId);
-    formData.append("name", data.name);
-    formData.append("search", data.name.replace(/ /g,"-"))
+    formData.append("name", data.name.trim());
+    formData.append("search", search);
+
     const response = await this.api.post("", formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  }
+
+  async update(data,id) {
+    const search = data.name.trim().replace(/\s/g, "-")
+    const catId = [];
+    data.categories.forEach(element => catId.push(element.id ? element.id : element.value));
+    const formData = new FormData();
+
+    !data.img!=='' ? formData.append("img", data.img) : formData.append("img", null) ;
+    formData.append("descr", data.descr.trim());
+    formData.append("categories", catId);
+    formData.append("name", data.name.trim());
+    formData.append("search", search.trim());
+    const response = await this.api.put(`/${id}`, formData, {
       headers: {
         "content-type": "multipart/form-data",
       },

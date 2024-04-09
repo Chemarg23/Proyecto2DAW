@@ -9,8 +9,9 @@ import MultiSelect from "../components/MultiSelect";
 import GuestHeader from "../Layouts/GuestHeader";
 import CategoryService from "../services/CategoryService";
 import SerieService from "../services/SerieService";
+
 const validationSchema = Yup.object().shape({
-  imgPath: Yup.mixed()
+  img: Yup.mixed()
     .required('Imagen de la serie es requerida')
     .test(
       'fileFormat',
@@ -44,11 +45,16 @@ export default function AddSerie() {
     }));
   }, [categories]);
 
-  const add = (values, setErrors) => {
+  const add = (values,setErrors) => {
     
     serieService.add(values).then((response) => {
-      navigate("/serie/"+response.search,{state:{toast:true}})
-    }).catch((err) => console.log(err));
+      navigate("/serie/"+response.search.replace(/ /g,"-"),{state:{toast:true}})
+    }).catch((err) =>{
+      const status = err.response.status
+      status === 422 && setErrors(err.response.data);
+      (status ===500 && err.response.data.detail.includes("409")) && setErrors({name:"Este nombre ya ha sido tomado"})
+
+    });
     
   };
   return (
@@ -59,14 +65,14 @@ export default function AddSerie() {
       <div className="dark:text-white px-16 py-12 border-black">
         <Formik
           initialValues={{
-            imgPath: "",
+            img: "",
             name: "",
             descr: "",
             categories: null,
           }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setErrors, resetForm }) =>
-            add(values, setErrors, resetForm)
+          onSubmit={(values, { setErrors }) =>
+            add(values, setErrors)
           }
         >
           {({ setFieldValue,errors }) => (
@@ -93,7 +99,7 @@ export default function AddSerie() {
                     )}
                   </label>
                   <label htmlFor="img" className="relative cursor-pointer">
-                    <Field id="hiddenImage" name="imgPath" className="hidden" />
+                    <Field id="hiddenImage" name="img" className="hidden" />
                     <input
                       type="file"
                       className="hidden"
@@ -101,7 +107,7 @@ export default function AddSerie() {
                       id="img"
                       onChange={(event) => {
                         const file = event.currentTarget.files[0];
-                        setFieldValue("imgPath", file);
+                        setFieldValue("img", file);
                         ["image/jpeg", "image/jpg", "image/png"].includes(
                           file.type
                         ) && setImgUrl(URL.createObjectURL(file));
@@ -113,8 +119,8 @@ export default function AddSerie() {
                       Seleccione una imagen
                     </div>
                   </label>
-                  {errors.imgPath && <span className="gap-x-3 col-span-2  text-red-600 flex">
-                    <span className="mt-1"><ExclamationIcon/></span>{errors.imgPath}</span>}
+                  {errors.img && <span className="gap-x-3 col-span-2  text-red-600 flex">
+                    <span className="mt-1"><ExclamationIcon/></span>{errors.img}</span>}
                 </div>
                 <div className="col-span-2">
                   <InputText

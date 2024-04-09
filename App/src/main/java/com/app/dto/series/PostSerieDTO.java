@@ -25,7 +25,7 @@ public class PostSerieDTO {
      * La imagen de la serie. Debe ser una imagen válida.
      */
     @ValidImage
-    private MultipartFile imgPath;
+    private MultipartFile img;
 
     /**
      * El nombre de la serie.

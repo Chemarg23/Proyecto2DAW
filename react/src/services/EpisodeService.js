@@ -18,20 +18,36 @@ export default class EpisodeService extends Service {
 
   async getAll() {
     return this.api.get();
-
   }
 
-  async add(userData) {
-    const response = await this.api.post('', userData);
-    return response.data;
+  async add(data, serieId) {
+    const formData = new FormData()
+    formData.append("name", data.name.replace(/ /g,"-"))
+    formData.append("fullname", data.name)
+    formData.append("video", data.video)
+    formData.append("img", data.img ? data.img : null)
+    formData.append("episode_number", data.episode_number)
+    formData.append("serieId", serieId)
+    const response = await this.api.post(``, formData, {
+      headers: {
+        "content-type": "multipart/form-data",
+      },
+    });
+    return response.data
   }
 
-  async update(id, userData) {
-    const response = await this.api.put(`/${id}`, userData);
+  async update(id,data ) {
+    const formData = new FormData()
+    formData.append("name", data.name.replace(/ /g,"-"))
+    formData.append("fullname", data.name)
+    formData.append("video", data.video ? data.video : null)
+    formData.append("img", data.img ? data.img : null)
+    formData.append("episode_number", data.episode_number)
+    const response = await this.api.put(`/${id}`, formData);
     return response.data;
   }
 
   async delete(id) {
-    await this.api.delete(`/${id}`);
+   return this.api.delete(`/${id}`);
   }
 }

@@ -7,15 +7,15 @@ export default function SerieDisplay({ index, series, serie }) {
   const navigate = useNavigate();
   return (
     <>
-      <div className="flex flex-col sm:flex-row gap-4 py-5">
-        <div className="w-full sm:w-1/4 order-1 sm:order-1">
+      <div className="flex flex-col lg:flex-row gap-4 py-5 justify-center lg:justify-start">
+        <div className="transition-all sm:w-[450px] w-[350px] lg:w-1/4 order-1 lg:order-1 justify-center align-middle text-center">
           <img
             onClick={() => navigate(`/serie/${serie.search}`)}
             className="h-44 cursor-pointer dark:hover:shadow-purple-500 dark:hover:shadow-md hover:shadow-2xl transition-all hover:scale-105 w-full"
             src={`${baseUrl}stream/img/${serie.imgPath}`}
           />
         </div>
-        <div className="dark:text-white order-2 sm:order-2">
+        <div className="dark:text-white order-2 lg:order-2">
           <p className="text-2xl font-semibold mb-1">
             <Link to={`/serie/${serie.search}`}>{serie.name}</Link>
             <span className="ms-3">
@@ -24,7 +24,7 @@ export default function SerieDisplay({ index, series, serie }) {
           </p>
           <div className="flex flex-nowrap">
             <p className="mt-1.5 inline-flex">
-              <span className="text-sm sm:text-lg text-wrap font-semibold">
+              <span className="text-sm lg:text-lg text-wrap font-semibold">
                 Categorías:{" "}
               </span>
               {serie.categories.map((cat, index) => {
@@ -66,7 +66,7 @@ export default function SerieDisplay({ index, series, serie }) {
           </p>
           <p className="mt-1.5">
             <span className="font-semibold text-lg">Descripción:</span>
-            <span className="category text-sm sm:text-lg">
+            <span className="category text-sm lg:text-lg">
               {" " + serie.descr.slice(0, 110) + "..."}
             </span>
           </p>

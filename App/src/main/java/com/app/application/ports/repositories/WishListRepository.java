@@ -3,6 +3,7 @@ package com.app.application.ports.repositories;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.app.domain.entity.User;
 import com.app.domain.entity.WishList;
@@ -10,6 +11,7 @@ import com.app.domain.entity.WishList;
 /**
  * Repositorio para la entidad WishList que gestiona la interacción con la base de datos.
  */
+@Repository
 public interface WishListRepository extends JpaRepository<WishList, Long> {
     
     /**

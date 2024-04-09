@@ -16,6 +16,10 @@ export default function WishListPage() {
   const [totalPages, setPages] = useState(Math.ceil(series.length / seriesPerPage));
 
   useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
     setSeries([...user.series])
     setPages(Math.ceil(series.length / seriesPerPage))
     const startIdx = currentPage * seriesPerPage;

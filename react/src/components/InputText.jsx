@@ -30,7 +30,7 @@ export default function InputText({
         {icon === "envelope" && <EnvelopeIcon />}
         {icon === "phone" && <PhoneIcon/>}
         {icon === "user" && <UserIcon/>}
-        {icon === "serie" && <i className="bi bi-badge-hd bg-purple-700"></i>}
+        {icon === "serie" && <i className="bi bi-badge-hd -translate-x-5"></i>}
 
         {icon === "eye" && (
           <div onClick={showPassword}>

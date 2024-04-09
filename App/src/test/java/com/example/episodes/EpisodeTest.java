@@ -44,7 +44,7 @@ public class EpisodeTest {
         episode.setName("Nombre del Episodio");
         episode.setFullname("Nombre Completo del Episodio");
         episode.setImgPath("ruta/de/imagen.jpg");
-        episode.setEpisodeNumber("1");
+        episode.setEpisodeNumber(1);
         episode.setVideoPath("ruta/de/video.mp4");
         episode.setReleaseDate(LocalDate.now());
         episode.setSerie(serie);

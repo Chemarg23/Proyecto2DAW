@@ -20,5 +20,4 @@ export default class ProfileService extends Service {
   async discharge(id) {
     return this.api.delete(`/discharge/${id}`);
   }
-
 }

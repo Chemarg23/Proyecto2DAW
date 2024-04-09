@@ -7,10 +7,10 @@ export default function SearchInput(){
     const research = (e) => e.key === 'Enter' && navigate(`/search/${search.replace(/ /g,'-')}`)
     
     return (
-        <div className="search-container">
+        <div className="search-container w-full">
             <input
               type="text"
-              className="py-2 px-3 rounded-xl dark:bg-gray-700 bg-gray-100 focus:ring-blue-500"
+              className="py-2 px-3 rounded-xl w-full dark:bg-gray-700 bg-gray-200 focus:ring-blue-500"
               placeholder="Search..."
               onChange={(e)=>setSearch(e.target.value)}
               onKeyUp={research}

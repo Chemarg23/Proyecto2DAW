@@ -1,3 +1,5 @@
+import { Button } from "@material-tailwind/react";
+
 export default function ChangeTheme(){
     
   const changeTheme = () => {
@@ -15,11 +17,11 @@ export default function ChangeTheme(){
   };
 
   return (
-    <button
+    <Button
     onClick={changeTheme}
-    className="py-2 px-3 rounded-xl dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:bg-gray-800 bg-gray-100 hover:bg-gray-300 focus:bg-gray-100"
+    className="py-2 px-3 rounded-xl dark:bg-gray-950 dark:hover:bg-gray-900 bg-gray-200 hover:bg-gray-300 "
   >
-    <i className="bi bi-brightness-high-fill"></i>
-  </button>
+    <i className="bi bi-brightness-high-fill text-black dark:text-white"></i>
+  </Button>
   )
 }

@@ -42,7 +42,7 @@ public class MessageDTO {
     /**
      * La ruta de la imagen adjunta al mensaje.
      */
-    private String imgPath;
+    private String imgPath = null;
 
     /**
      * El identificador de la sala de chat a la que pertenece el mensaje.

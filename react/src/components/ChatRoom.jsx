@@ -41,6 +41,7 @@ export default function ChatRoom({ room }) {
         room: room,
         imgPath: response.data
       })
+      setFile(null)
       socket.send(data);
     }else{
       const data = JSON.stringify({
@@ -64,7 +65,7 @@ export default function ChatRoom({ room }) {
   if (socket) {
 
     socket.onmessage = async (e) => {
-      const jsonMessage = JSON.parse(e.data);      
+      const jsonMessage = JSON.parse(e.data); 
       setMessages((messages) => [jsonMessage, ...messages]);
     };
 

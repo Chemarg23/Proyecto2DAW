@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -119,15 +120,13 @@ public class SerieServiceImpl implements SerieService {
     /**
      * Crea una nueva serie en la base de datos junto con su imagen y categorías
      * asociadas.
-     *
-     * @param serie      La serie que se va a crear.
-     * @param categories El conjunto de identificadores de categorías asociadas a la
-     *                   serie.
-     * @param img        El archivo de imagen de la serie.
-     * @return La serie creada.
+     * 
+     * @param id  identificador de la serie a actuzalizar
+     * @param dto DTO de la serie a añadir o actualizar
      * @throws ResponseStatusException Si ocurre un error durante la creación de la
      *                                 serie.
      */
+    @Override
     public Serie createOrUpdate(PostSerieDTO dto, Long id) {
         Serie serie = id != null ? repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Serie no encontrada"))
@@ -137,10 +136,9 @@ public class SerieServiceImpl implements SerieService {
         serie.setDescr(dto.getDescr());
         serie.setName(dto.getName());
         serie.setSearch(dto.getName());
-        
-        if (dto.getImgPath() != null) {
+        if (dto.getImg() != null) {
             try {
-                String originalFilename = dto.getImgPath().getOriginalFilename();
+                String originalFilename = dto.getImg().getOriginalFilename();
                 String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
                 String fileName = Utils.generateRandomString(40) + UUID.randomUUID().toString() + extension;
                 Path path = Paths.get(UPLOAD_DIR + "/" + fileName);
@@ -148,16 +146,19 @@ public class SerieServiceImpl implements SerieService {
                     Path toDelete = Paths.get(UPLOAD_DIR + "/" + serie.getImgPath());
                     Files.delete(toDelete);
                 }
-                Files.copy(dto.getImgPath().getInputStream(), path);
+                Files.copy(dto.getImg().getInputStream(), path);
                 serie.setImgPath(fileName);
 
             } catch (IOException e) {
                 throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage());
             }
         }
-        return repo.save(serie);
+        try {
+            return repo.save(serie);
+        } catch (DataIntegrityViolationException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
     }
-
 
     /**
      * Elimina una serie de la base de datos junto con su archivo de imagen
@@ -198,21 +199,23 @@ public class SerieServiceImpl implements SerieService {
     }
 
     /**
- * Obtiene un conjunto de categorías a partir de un conjunto de IDs de categorías.
- *
- * @param categoryIds El conjunto de IDs de categorías.
- * @return Un conjunto de categorías.
- * @throws ResponseStatusException Si no se encuentra una categoría con alguno de los IDs proporcionados.
- */
-private Set<Category> getCategorySet(Set<Long> categoryIds) {
-    Set<Category> categorySet = new HashSet<>();
-    for (Long categoryId : categoryIds) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "No existe la categoría con el ID: " + categoryId));
-        categorySet.add(category);
+     * Obtiene un conjunto de categorías a partir de un conjunto de IDs de
+     * categorías.
+     *
+     * @param categoryIds El conjunto de IDs de categorías.
+     * @return Un conjunto de categorías.
+     * @throws ResponseStatusException Si no se encuentra una categoría con alguno
+     *                                 de los IDs proporcionados.
+     */
+    private Set<Category> getCategorySet(Set<Long> categoryIds) {
+        Set<Category> categorySet = new HashSet<>();
+        for (Long categoryId : categoryIds) {
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "No existe la categoría con el ID: " + categoryId));
+            categorySet.add(category);
+        }
+        return categorySet;
     }
-    return categorySet;
-}
 
 }

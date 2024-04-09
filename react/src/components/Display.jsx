@@ -13,7 +13,6 @@ const Display = () => {
   const [name, setName] = useState("");
   const [counter, setCounter] = useState(0);
   const countPor3 = useMemo(() => counter * 3, [counter]);
-  console.log(user)
   const handleDispatch = async (e) => {
    setName(() => e.target.value);
     dispatch(

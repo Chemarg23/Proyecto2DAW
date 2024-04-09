@@ -1,11 +1,13 @@
+import { Button } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
+import DeleteEpisode from "../components/Modals/DeleteEpisode";
+import UpdateEpisodeModal from "../components/Modals/UpdateEpisodeModal";
 import VideoPlayer from "../components/VideoPlayer";
 import GuestHeader from "../Layouts/GuestHeader";
 import EpisodeService from "../services/EpisodeService";
 import { baseUrl } from "../services/Service";
-
 export default function VideoPage() {
   const [episode, setEpisode] = useState(false);
   const [serie, setSerie] = useState([]);
@@ -16,7 +18,8 @@ export default function VideoPage() {
   const [error, setError] = useState(false);
   const episodeService = new EpisodeService();
   const [showChatRoom, setShowChatRoom] = useState(true);
-
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -27,7 +30,6 @@ export default function VideoPage() {
         setEpisode(episodeResponse.data);
         setSerie(episodeResponse.data.serie);
         setAllEpisodes(episodesResponse.data);
-
         document.title = `Ver - ${episodeResponse.data.serie.name} ${episodeResponse.data.episodeNumber}`;
       } catch (error) {
         if (error.response.status == 404) {
@@ -38,7 +40,7 @@ export default function VideoPage() {
     };
     fetchData();
     return () => setShowChatRoom(false);
-  }, [name]);
+  }, []);
 
   useEffect(() => {
     if (allEpisodes.length > 0 && episode.episodeNumber > 0) {
@@ -70,6 +72,29 @@ export default function VideoPage() {
               <h1 className="font-bold text-5xl dark:text-white mb-5">
                 {serie.name} - {episode.episodeNumber}
               </h1>
+              <div className="flex items-center justify-between">
+                <p className="font-bold text-3xl dark:text-white mb-5">
+                  <span className="relative left-0">{episode.fullname}</span>
+                </p>
+
+                <div className="flex gap-x-4">
+                  <Button
+                    className="w-full sm:w-auto dark:text-yellow-500 text-lg font-semibold dark:hover:text-yellow-400 dark:border-yellow-500 text-white border-yellow-400 hover:shadow-md dark:hover:shadow-yellow-500 rounded-xl px-3 py-2 border-2 dark:bg-transparent bg-yellow-400 hover:bg-yellow-500 hover:border-yellow-500"
+                    onClick={() => setShowUpdateModal(true)}
+                  >
+                    <i className="bi bi-pencil-square me-2"></i>Modificar
+                    Episodio
+                  </Button>
+
+                  <Button
+                    onClick={() => setShowDeleteModal(true)}
+                    className="w-full sm:w-auto dark:text-red-500 text-lg font-semibold dark:hover:text-red-400 dark:border-red-500 text-white dark:hover:border-red-400 border-red-500 hover:shadow-md dark:hover:shadow-red-500 rounded-xl px-3 py-2 border-2 dark:bg-transparent bg-red-500 hover:bg-red-600 hover:border-red-600"
+                  >
+                    <i className="fa-solid fa-trash me-2"></i>Eliminar Episodio
+                  </Button>
+                </div>
+              </div>
+
               <VideoPlayer episode={episode} />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-y-5 mt-5 w-full mb-10 text-center dark:text-white">
                 <div className="text-white">
@@ -156,6 +181,21 @@ export default function VideoPage() {
           </div>
         )}
       </div>
+
+      {showUpdateModal && (
+        <UpdateEpisodeModal
+          setEpisode={setEpisode}
+          setState={setShowUpdateModal}
+          episode={episode}
+        />
+      )}
+      {showDeleteModal && (
+        <DeleteEpisode
+          episode={episode}
+          serie={serie}
+          setState={setShowDeleteModal}
+        />
+      )}
     </>
   );
 }

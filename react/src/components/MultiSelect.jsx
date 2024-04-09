@@ -3,7 +3,7 @@ import { useState } from "react";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
-export default function MultiSelect({ setter, values, name }) {
+export default function MultiSelect({ setter, values, name, value="" }) {
   const animatedComponents = makeAnimated();
   const element = document.querySelector("html");
   const [darkMode, setMode] = useState(element.classList.contains("dark"));
@@ -33,6 +33,7 @@ export default function MultiSelect({ setter, values, name }) {
         setter(name, mappedOptions);
       }}
       isSearchable
+      defaultValue={value}
       name="categories"
       options={values}
       components={animatedComponents}

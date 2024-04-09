@@ -17,7 +17,7 @@ export default function SeriePage() {
   const { name } = useParams();
   const [showFullDescription, setShowFullDescription] = useState(false);
   const location = useLocation();
-  const user = useSelector(state=>state.user)
+  const user = useSelector((state) => state.user);
   const handleToggleDescription = () =>
     setShowFullDescription(!showFullDescription);
 
@@ -46,13 +46,13 @@ export default function SeriePage() {
 
   return (
     <>
-      <GuestHeader />
+        <GuestHeader />
       <ToastContainer></ToastContainer>
       {serie && (
         <div className="w-screen grid grid-cols-2  bg-black h-[3%] py-6 md:py-0">
-          <div className="bg-transparent  text-white h-full z-50  md:ms-0">
+          <div className="bg-transparent  text-white h-full z-40  md:ms-0">
             <div className="text-start w-[110%]  mt-8 ms-10 sm:ms-20 ">
-              <div className="sm:block md:hidden w-[130%]">
+              <div className="sm:flex md:hidden w-[130%] justify-center text-center mb-5">
                 <img
                   src={`${baseUrl}stream/img/${serie.imgPath}`}
                   alt=""
@@ -128,7 +128,7 @@ export default function SeriePage() {
               </p>
             </div>
           </div>
-          <div className="serie-container bg-black h-full hidden md:block relative inset-0  z-0">
+          <div className="serie-container bg-black h-full  hidden md:block relative inset-0  z-0">
             <img
               src={`${baseUrl}stream/img/${serie.imgPath}`}
               alt=""
@@ -138,8 +138,14 @@ export default function SeriePage() {
         </div>
       )}
       <div className="sm:px-16 px-5">
-        {user.rol===1 && <SerieToolbar serie={serie}/>}
-
+        {user.rol === 1 && (
+          <SerieToolbar
+            serie={serie}
+            setSerie={setSerie}
+            setEpisodes={setEpisodes}
+            episodes={episodes}
+          />
+        )}
         <p className="mt-5">
           <span className="font-semibold text-2xl mt-10 dark:text-white text-wrap px-10 py-10">
             Capítulos de {serie.name}
@@ -150,22 +156,32 @@ export default function SeriePage() {
           {episodes &&
             episodes.map((ep) => {
               return (
-                <Link
-                  key={ep.id}
-                  className="hover:scale-100  scale-95 dark:text-white transition-all"
-                  to={`/watch/${ep.name}`}
-                >
-                  <img
-                    src={`${baseUrl}stream/img/${
-                      ep.imgPath ? ep.imgPath : serie.imgPath
-                    }`}
-                    alt=""
-                    className="h-[80%] w-full bi-image-fill rounded-xl dark:hover:shadow-purple-600 hover:shadow-md"
-                  />
-                  <p className="text-center text-lg">
-                    Capítulo {ep.episodeNumber}
-                  </p>
-                </Link>
+                <div key={ep.id}>
+                  <Link
+                    key={ep.id}
+                    className="hover:scale-100 w-full  scale-95 dark:text-white transition-all"
+                    to={`/watch/${ep.name}`}
+                  >
+                    <img
+                      src={`${baseUrl}stream/img/${
+                        ep.imgPath ? ep.imgPath : serie.imgPath
+                      }`}
+                      alt=""
+                      className="h-[80%] w-full bi-image-fill rounded-xl dark:hover:shadow-purple-600 hover:shadow-md"
+                    />
+                    <p className="text-center text-lg">
+                      Capítulo {ep.episodeNumber}
+                    </p>
+                  </Link>
+                  {user.rol && (
+                    <input
+                      type="checkbox"
+                      className="ms-[47%] w-4 h-5"
+                      name=""
+                      id=""
+                    />
+                  )}{" "}
+                </div>
               );
             })}
         </div>

@@ -44,8 +44,6 @@ public class EpisodeServiceTest {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("id").descending());
         Page<Episode> page = new PageImpl<>(episodes, pageable, episodes.size());
         when(episodesRepository.findAll(pageable)).thenReturn(page);
-
-        // Llamar al método del servicio y verificar el resultado
         List<Episode> result = episodeService.getAll();
         assertEquals(episodes.size(), result.size());
     }

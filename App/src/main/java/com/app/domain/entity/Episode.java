@@ -50,7 +50,7 @@ public class Episode {
      * El número de episodio.
      */
     @Column(name = "episode_number")
-    private String episodeNumber;
+    private int episodeNumber;
 
     /**
      * La ruta del video del episodio.

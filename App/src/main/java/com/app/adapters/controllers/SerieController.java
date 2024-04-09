@@ -112,7 +112,7 @@ public class SerieController {
      */
     @PostMapping()
     public ResponseEntity<Serie> create(
-            @RequestParam(value = "imgPath") @ValidImage MultipartFile imgPath,
+            @RequestParam(value = "img") @ValidImage MultipartFile img,
             @RequestParam("name") @NotBlank(message = "Este campo es obligatorio") String name,
             @RequestParam("descr") @NotBlank(message = "Este campo es obligatorio") String descr,
             @RequestParam("search") String search,
@@ -121,14 +121,15 @@ public class SerieController {
             PostSerieDTO serie = new PostSerieDTO();
             serie.setDescr(descr);
             serie.setName(name);
-            serie.setSearch(search);
-            serie.setImgPath(imgPath);
+            serie.setSearch(search.trim().replaceAll("\\s", "-"));
+            serie.setImg(img);
             serie.setCategories(categories);
             return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrUpdate(serie,null));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+    
 /**
  * Actualiza una serie existente.
  * 
@@ -143,7 +144,7 @@ public class SerieController {
 @PutMapping("/{id}")
 public ResponseEntity<Serie> update(
     @PathVariable Long id,
-    @RequestParam(value = "imgPath", required = false) @ValidImage MultipartFile imgPath,
+    @RequestParam(value = "img", required = false) @ValidImage MultipartFile imgPath,
     @RequestParam("name") @NotBlank(message = "Este campo es obligatorio") String name,
     @RequestParam("descr") @NotBlank(message = "Este campo es obligatorio") String descr,
     @RequestParam("search") String search,
@@ -152,8 +153,8 @@ public ResponseEntity<Serie> update(
         PostSerieDTO serie = new PostSerieDTO();
         serie.setDescr(descr);
         serie.setName(name);
-        serie.setSearch(search);
-        serie.setImgPath(imgPath);
+        serie.setSearch(search.trim().replaceAll("\\s", "-"));
+        serie.setImg(imgPath);
         serie.setCategories(categories);
         return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrUpdate(serie,id));
     } catch (Exception e) {

@@ -1,8 +1,10 @@
 package com.app.application.ports.services;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.app.domain.entity.Episode;
+import com.app.dto.episodes.EpisodeDTO;
 
 /**
  * Interfaz que define los métodos para acceder a los datos de los episodios.
@@ -31,4 +33,8 @@ public interface EpisodeService {
      * @return Lista de episodios de la serie con el identificador especificado
      */
     public List<Episode> getBySerie(Long id);
+
+    public Episode createOrUpdate(EpisodeDTO dto, Long id) throws IOException;
+
+    public void delete(Long id);
 }

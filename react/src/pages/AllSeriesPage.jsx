@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,22 +5,20 @@ import SerieDisplay from "../components/SerieDisplay";
 import GuestHeader from "../Layouts/GuestHeader";
 import SerieService from "../services/SerieService";
 
-export default function AllSeriesPage(){
+export default function AllSeriesPage() {
   const navigate = useNavigate();
   const { page } = useParams();
-  const currentPage = page ? page : 1
+  const currentPage = page ? page : 1;
   document.title = `Series`;
   const [series, setSeries] = useState([]);
   const [pages, setPages] = useState(0);
-  
+
   const service = new SerieService();
   const fetchSeries = () => {
-    service
-      .getAll(currentPage)
-      .then((response) => {
-        setSeries(response.data.series);
-        setPages(response.data.totalPages);
-      })
+    service.getAll(currentPage).then((response) => {
+      setSeries(response.data.series);
+      setPages(response.data.totalPages);
+    });
   };
   const handlePageChange = ({ selected }) => {
     const pageNumber = parseInt(selected) + 1;
@@ -29,6 +26,7 @@ export default function AllSeriesPage(){
   };
   useEffect(() => {
     fetchSeries();
+    window.scrollTo(0, 0);
   }, [page]);
 
   return (
@@ -46,7 +44,7 @@ export default function AllSeriesPage(){
           <ReactPaginate
             pageCount={pages}
             pageRangeDisplayed={3}
-            forcePage={currentPage -1}
+            forcePage={currentPage - 1}
             onPageChange={handlePageChange}
             marginPagesDisplayed={3}
             containerClassName={"pagination"}
@@ -57,4 +55,3 @@ export default function AllSeriesPage(){
     </div>
   );
 }
-

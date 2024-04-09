@@ -16,7 +16,7 @@ export default function DeleteUserModal({
   };
 
   return (
-    <div className="z-50 absolute shadow-md top-[35%] left-[33%] bg-gray-950 dark:text-white px-10 py-10 rounded-xl dark:shadow-purple-900">
+    <div className="z-50  shadow-md top-[35%] left-[33%] bg-gray-950 dark:text-white px-10 py-10 rounded-xl dark:shadow-purple-900 fixed">
       <p
         onClick={() => setState(false)}
         className="absolute top-3 right-5 dark:text-white dark:hover:bg-gray-700 rounded-full py-1 px-3 cursor-pointer"
@@ -38,7 +38,7 @@ export default function DeleteUserModal({
           onClick={discharge}
           className="2-[50%] shadow-xl py-2.5 px-4 text-sm font-semibold rounded-xl  border border-red-600 text-white hover:bg-red-700 focus:outline-none  dark:text-red-500 dark:border-red-500 dark:hover:text-white dark:hover:bg-red-500  dark:bg-transparent bg-red-600"
         >
-          Dar Baja
+          Eliminar
         </Button>
       </div>
     </div>

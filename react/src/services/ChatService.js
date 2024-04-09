@@ -16,7 +16,7 @@ export default class ChatService extends Service {
 
   async saveImg( img) {
     const formData = new FormData();
-    formData.append("imgPath", img);
+    formData.append("img", img);
     return this.api.post(``, formData, {
       headers: {
         "content-type": "multipart/form-data",

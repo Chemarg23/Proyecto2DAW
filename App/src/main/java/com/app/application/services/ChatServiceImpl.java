@@ -25,9 +25,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 
-/**
- * Servicio para la gestión de mensajes en un chat mediante WebSockets.
- */
 @Service
 @RequiredArgsConstructor
 public class ChatServiceImpl extends TextWebSocketHandler {
@@ -38,18 +35,12 @@ public class ChatServiceImpl extends TextWebSocketHandler {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
-    /**
-     * Método que se ejecuta después de que se establece una conexión WebSocket.
-     */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         int roomId = extractRoomId(session);
         roomSessions.computeIfAbsent(roomId, k -> ConcurrentHashMap.newKeySet()).add(session);
     }
 
-    /**
-     * Método que se ejecuta después de que se cierra una conexión WebSocket.
-     */
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         int roomId = extractRoomId(session);
@@ -59,11 +50,9 @@ public class ChatServiceImpl extends TextWebSocketHandler {
         }
     }
 
-    /**
-     * Maneja el mensaje de texto recibido a través del WebSocket.
-     */
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+
         Message newMessage = mapper.readValue(message.getPayload(), Message.class);
         int roomId = newMessage.getRoom();
 
@@ -71,19 +60,20 @@ public class ChatServiceImpl extends TextWebSocketHandler {
         if (sessions != null) {
             Message finalMessage = chatRepository.save(newMessage);
             MessageDTO finalMessageDTO = modelMapper.map(finalMessage, MessageDTO.class);
-            User user = userRepository.findById(finalMessage.getUser().getId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-            finalMessageDTO.setUser(modelMapper.map(user, GetUserDTO.class));
+            User user = userRepository.findById(finalMessageDTO.getUser().getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+            GetUserDTO dto = new GetUserDTO();
+            dto.setName(user.getName());
+            dto.setEmail(user.getEmail());
+            dto.setImgPath(user.getImgPath());
+            finalMessageDTO.setUser(dto);
             TextMessage textMessage = new TextMessage(mapper.writeValueAsString(finalMessageDTO));
             for (WebSocketSession webSocketSession : sessions) {
                 webSocketSession.sendMessage(textMessage);
             }
+            
         }
     }
 
-    /**
-     * Extrae el ID de la sala de la URL del WebSocket.
-     */
     private int extractRoomId(WebSocketSession session) {
         String uriString = session.getUri().toString();
         UriComponents uriComponents = UriComponentsBuilder.fromUriString(uriString).build();

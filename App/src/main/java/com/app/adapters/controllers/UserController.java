@@ -27,7 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RestController // Indica que esta clase es un controlador REST
 @RequiredArgsConstructor // Genera un constructor con argumentos para las propiedades
 @RequestMapping("/api/users") // Mapea las solicitudes que comienzan con /users a este controlador
-@CrossOrigin(origins={"http://localhost:5173"})
+@CrossOrigin(origins={"*"})
 public class UserController {
     
     private final UserService userService; // Inyecta una instancia de UserService al controlador

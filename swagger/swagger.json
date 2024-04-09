@@ -1,0 +1,1441 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Nombre de tu API",
+        "version": "1.0.0",
+        "description": "Descripción de tu API"
+    },
+    "servers": [{
+        "url": "http://localhost:8080",
+        "description": "Servidor de desarrollo"
+    }],
+    "paths": {
+        "/api/auth": {
+            "/login": {
+                "post": {
+                    "summary": "Iniciar sesión de usuario",
+                    "description": "Función para el inicio de sesión de un usuario.",
+                    "tags": ["Auth"],
+                    "requestBody": {
+                        "description": "Credenciales del usuario",
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Credentials"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Respuesta exitosa",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AuthenticatedUser"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Usuario no encontrado"
+                        },
+                        "401": {
+                            "description": "Contraseña incorrecta"
+                        },
+                        "422": {
+                            "description": "Error de validación",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "error": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "/register": {
+                "post": {
+                    "summary": "Registro de un nuevo usuario",
+                    "description": "Función para el registro de un nuevo usuario.",
+                    "tags": ["Auth"],
+                    "requestBody": {
+                        "description": "Datos del nuevo usuario",
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/NewUser"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Respuesta exitosa",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "$ref": "#/components/schemas/AuthenticatedUser"
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "Usuario no encontrado"
+                        },
+                        "409": {
+                            "description": "Email ya existente"
+                        },
+                        "422": {
+                            "description": "Error de validación",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "object",
+                                        "properties": {
+                                            "error": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "summary": "Obtener todas las categorías",
+                "description": "Endpoint para recuperar todas las categorías.",
+                "tags": ["Categories"],
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorías recuperada exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Category"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/chat": {
+            "/{roomId}/{page}": {
+                "get": {
+                    "summary": "Obtener mensajes de una sala de chat paginados",
+                    "description": "Obtiene los mensajes de una sala de chat paginados.",
+                    "tags": ["Chat"],
+                    "parameters": [{
+                            "name": "roomId",
+                            "in": "path",
+                            "required": true,
+                            "description": "Identificador de la sala de chat.",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "page",
+                            "in": "path",
+                            "required": true,
+                            "description": "Número de página.",
+                            "schema": {
+                                "type": "integer"
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "200": {
+                            "description": "Lista de mensajes de chat paginados recuperada exitosamente",
+                            "content": {
+                                "application/json": {
+                                    "schema": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/MessageDTO"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "404": {
+                            "description": "No se encontraron mensajes para la sala de chat especificada"
+                        }
+                    }
+                }
+            },
+            "/": {
+                "post": {
+                    "summary": "Guardar imagen",
+                    "description": "Endpoint para guardar una imagen enviada como un archivo.",
+                    "tags": ["Upload"],
+                    "requestBody": {
+                        "required": true,
+                        "content": {
+                            "multipart/form-data": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "img": {
+                                            "type": "string",
+                                            "format": "binary",
+                                            "description": "El archivo de imagen a guardar."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "Imagen guardada exitosamente",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "500": {
+                            "description": "Error al guardar la imagen",
+                            "content": {
+                                "text/plain": {
+                                    "schema": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        "/api/episodes": {
+            "get": {
+                "summary": "Obtener todos los episodios",
+                "description": "Devuelve todos los episodios.",
+                "tags": ["Episodes"],
+                "responses": {
+                    "200": {
+                        "description": "Lista de todos los episodios",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Episode"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró"
+                    }
+                }
+            },
+            "post": {
+                "summary": "Agregar un nuevo episodio",
+                "description": "Agrega un nuevo episodio.",
+                "tags": ["Episodes"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "img": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "La imagen del episodio (opcional)"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "El nombre del episodio"
+                                    },
+                                    "video": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "El video del episodio"
+                                    },
+                                    "fullname": {
+                                        "type": "string",
+                                        "description": "El nombre completo del episodio"
+                                    },
+                                    "serieId": {
+                                        "type": "integer",
+                                        "description": "El ID de la serie a la que pertenece el episodio"
+                                    },
+                                    "episode_number": {
+                                        "type": "integer",
+                                        "description": "El número del episodio"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Episodio creado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Episode"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Fallo en la validacion"
+                    },
+                    "409": {
+                        "description": "Clave Primaria duplicada"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                }
+            }
+        },
+        "/api/episodes/name/{name}": {
+            "get": {
+                "summary": "Buscar un episodio por nombre",
+                "description": "Busca un episodio por su nombre.",
+                "tags": ["Episodes"],
+                "parameters": [{
+                    "name": "name",
+                    "in": "path",
+                    "required": true,
+                    "description": "Nombre del episodio a buscar",
+                    "schema": {
+                        "type": "string"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Episodio encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Episode"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró el episodio"
+                    }
+                }
+            }
+        },
+        "/api/episodes/episodes/{id}": {
+            "get": {
+                "summary": "Obtener todos los episodios de una serie",
+                "description": "Devuelve todos los episodios de una serie específica.",
+                "tags": ["Episodes"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Identificador de la serie",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "200": {
+                        "description": "Lista de episodios de la serie encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Episode"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No se encontró la serie"
+                    }
+                }
+            }
+        },
+        "/api/episodes/{id}": {
+            "put": {
+                "summary": "Actualizar un episodio",
+                "description": "Actualiza un episodio existente.",
+                "tags": ["Episodes"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del episodio a actualizar",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "img": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "La nueva imagen del episodio (opcional)"
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "description": "El nuevo nombre del episodio"
+                                    },
+                                    "video": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "El nuevo video del episodio (opcional)"
+                                    },
+                                    "fullname": {
+                                        "type": "string",
+                                        "description": "El nuevo nombre completo del episodio"
+                                    },
+                                    "episode_number": {
+                                        "type": "integer",
+                                        "description": "El nuevo número del episodio"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Episodio actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Episode"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Fallo en la validacion"
+                    },
+                    "409": {
+                        "description": "Clave Primaria duplicada"
+                    },
+                    "500": {
+                        "description": "Error interno del servidor"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Eliminar un episodio",
+                "description": "Elimina un episodio existente.",
+                "tags": ["Episodes"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "ID del episodio a eliminar",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "204": {
+                        "description": "Episodio eliminado exitosamente"
+                    }
+                }
+            }
+        },
+        "/api/profile/{id}": {
+            "put": {
+                "summary": "Actualizar perfil de usuario",
+                "description": "Actualiza el perfil de un usuario.",
+                "tags": ["Profile"],
+                "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "description": "Identificador del usuario",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "imgPath",
+                        "in": "formData",
+                        "required": false,
+                        "description": "Imagen de perfil a subir (opcional)",
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "required": true,
+                        "description": "Nuevo nombre del usuario",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "required": true,
+                        "description": "Nuevo correo electrónico del usuario",
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
+                        "name": "phone",
+                        "in": "formData",
+                        "required": true,
+                        "description": "Nuevo número de teléfono del usuario",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Perfil de usuario actualizado exitosamente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUserDTO"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/profile/password/{id}": {
+            "put": {
+                "summary": "Cambiar contraseña de usuario",
+                "description": "Cambia la contraseña de un usuario.",
+                "tags": ["Profile"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Identificador del usuario",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/NewPassword"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Contraseña cambiada exitosamente"
+                    }
+                }
+            }
+        },
+        "/api/profile/discharge/{id}": {
+            "delete": {
+                "summary": "Dar de baja al usuario",
+                "description": "Da de baja a un usuario.",
+                "tags": ["Profile"],
+                "parameters": [{
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "description": "Identificador del usuario",
+                    "schema": {
+                        "type": "integer"
+                    }
+                }],
+                "responses": {
+                    "204": {
+                        "description": "Usuario dado de baja exitosamente"
+                    }
+                }
+            }
+        },
+
+        "/api/series": {
+            "get": {
+                "tags": ["Series"],
+                "summary": "Obtiene todas las series paginadas.",
+                "responses": {
+                    "200": {
+                        "description": "Lista de todas las series."
+                    },
+                    "404": {
+                        "description": "No se encontró"
+                    }
+                }
+            },
+            "/series/{id}": {
+                "get": {
+                    "tags": ["Series"],
+                    "summary": "Obtiene una serie por su ID.",
+                    "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la serie a buscar.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "La serie encontrada."
+                        },
+                        "404": {
+                            "description": "No se encontró"
+                        }
+                    }
+                },
+                "put": {
+                    "tags": ["Series"],
+                    "summary": "Actualiza una serie existente.",
+                    "parameters": [{
+                            "name": "id",
+                            "in": "path",
+                            "description": "ID de la serie a actualizar.",
+                            "required": true,
+                            "schema": {
+                                "type": "integer"
+                            }
+                        },
+                        {
+                            "name": "img",
+                            "in": "formData",
+                            "description": "Imagen de la serie a subir (opcional).",
+                            "required": false,
+                            "schema": {
+                                "type": "string",
+                                "format": "binary"
+                            }
+                        },
+                        {
+                            "name": "name",
+                            "in": "formData",
+                            "description": "Nuevo nombre de la serie.",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "descr",
+                            "in": "formData",
+                            "description": "Nueva descripción de la serie.",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "search",
+                            "in": "formData",
+                            "description": "Nueva cadena de búsqueda de la serie.",
+                            "required": true,
+                            "schema": {
+                                "type": "string"
+                            }
+                        },
+                        {
+                            "name": "categories",
+                            "in": "formData",
+                            "description": "Conjunto de identificadores de categorías asociadas a la serie.",
+                            "required": true,
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "type": "integer"
+                                }
+                            }
+                        }
+                    ],
+                    "responses": {
+                        "201": {
+                            "description": "La serie actualizada."
+                        },
+                        "409": {
+                            "description": "Nombre duplicado"
+                        },
+                        "404": {
+                            "description": "No se encontró la serie"
+                        },
+                        "422": {
+                            "description": "Fallo en la validación, devuelve Campo:Error"
+                        }
+                    }
+                },
+                "delete": {
+                    "tags": ["Series"],
+                    "summary": "Elimina una serie por su ID.",
+                    "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID de la serie a eliminar.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }],
+                    "responses": {
+                        "204": {
+                            "description": "Operación exitosa."
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Series"],
+                "summary": "Crea una nueva serie con imagen y categorías asociadas.",
+                "parameters": [{
+                        "name": "img",
+                        "in": "formData",
+                        "description": "El archivo de imagen de la serie.",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "binary"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "El nombre de la serie.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "descr",
+                        "in": "formData",
+                        "description": "La descripción de la serie.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "formData",
+                        "description": "El término de búsqueda de la serie.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "categories",
+                        "in": "formData",
+                        "description": "El conjunto de identificadores de categorías asociadas.",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "La serie actualizada."
+                    },
+                    "409": {
+                        "description": "Nombre duplicado"
+                    },
+                    "422": {
+                        "description": "Fallo en la validación, devuelve Campo:Error"
+                    }
+                }
+            }
+        },
+
+        "/api/stream": {
+            "/{title}": {
+                "get": {
+                    "tags": ["Stream"],
+                    "summary": "Obtiene y transmite el contenido multimedia especificado.",
+                    "parameters": [{
+                        "name": "title",
+                        "in": "path",
+                        "description": "Título del contenido multimedia.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "El recurso de contenido multimedia."
+                        }
+                    }
+                }
+            },
+            "/img/{title}": {
+                "get": {
+                    "tags": ["Stream"],
+                    "summary": "Obtiene la imagen de episodio especificada.",
+                    "parameters": [{
+                        "name": "title",
+                        "in": "path",
+                        "description": "Título de la imagen.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "El recurso de la imagen."
+                        }
+                    }
+                }
+            },
+            "/img/user/{title}": {
+                "get": {
+                    "summary": "Obtiene la imagen de usuario especificada.",
+                    "parameters": [{
+                        "name": "title",
+                        "in": "path",
+                        "description": "Título de la imagen de usuario.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "El recurso de la imagen de usuario."
+                        }
+                    }
+                }
+            },
+            "/img/chat/{title}": {
+                "get": {
+                    "tags": ["Stream"],
+                    "summary": "Obtiene la imagen de chat especificada.",
+                    "parameters": [{
+                        "name": "title",
+                        "in": "path",
+                        "description": "Título de la imagen de chat.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "El recurso de la imagen de chat."
+                        }
+                    }
+                }
+            }
+        },
+
+        "/api/users": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Obtiene todos los usuarios.",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuarios."
+                    },
+                    "404": {
+                        "description": "No se encontró"
+                    }
+                }
+            },
+            "/{id}": {
+                "get": {
+                    "tags": ["Users"],
+                    "summary": "Obtiene un usuario por su ID.",
+                    "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario a obtener.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }],
+                    "responses": {
+                        "200": {
+                            "description": "El usuario correspondiente."
+                        },
+                        "404": {
+                            "description": "No se encontró"
+                        }
+                    }
+                },
+                "put": {
+                    "tags": ["Users"],
+                    "summary": "Actualiza un usuario por su ID.",
+                    "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario a actualizar.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }],
+                    "requestBody": {
+                        "description": "Datos del usuario a actualizar.",
+                        "required": true,
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetUserDTO"
+                                }
+                            }
+                        }
+                    },
+                    "responses": {
+                        "200": {
+                            "description": "El usuario actualizado."
+                        },
+                        "404": {
+                            "description": "No se encontró"
+                        },
+                        "409": {
+                            "description": "Email duplicado"
+                        },
+                        "422": {
+                            "description": "Error de validación, devuelve objeto Campo:error"
+                        }
+
+                    }
+                },
+                "delete": {
+                    "tags": ["Users"],
+                    "summary": "Elimina un usuario por su ID.",
+                    "parameters": [{
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario a eliminar.",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }],
+                    "responses": {
+                        "204": {
+                            "description": "No Content."
+                        },
+                        "404": {
+                            "description": "No se encontró"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": ["Users"],
+                "summary": "Agrega un nuevo usuario.",
+                "requestBody": {
+                    "description": "Datos del usuario a crear.",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PostUserDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "El usuario creado."
+                    },
+
+                    "409": {
+                        "description": "Email duplicado"
+                    },
+                    "422": {
+                        "description": "Error de validación, devuelve objeto Campo:error"
+                    }
+                }
+            }
+        },
+
+        "/api/wishlist": {
+            "post": {
+                "tags": ["WishList"],
+                "summary": "Agrega una serie a la lista de deseos de un usuario.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WishListDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa. La serie se agregó correctamente a la lista de deseos."
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Elimina una serie de la lista de deseos de un usuario.",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/WishListDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Operación exitosa. La serie se eliminó correctamente de la lista de deseos."
+                    }
+                }
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+    },
+    "components": {
+        "schemas": {
+            "Credentials": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "El correo electrónico del usuario"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "La contraseña del usuario"
+                    },
+                    "remember": {
+                        "type": "boolean",
+                        "description": "Indica si se debe recordar la sesión del usuario"
+                    }
+                },
+                "required": ["email", "password"]
+            },
+            "AuthenticatedUser": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "El ID del usuario"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre del usuario"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "El correo electrónico del usuario"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "El número de teléfono del usuario"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "La fecha de creación del usuario"
+                    },
+                    "dischargeDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "La fecha de baja del usuario"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "El token de autenticación del usuario"
+                    },
+                    "rol": {
+                        "type": "integer",
+                        "description": "El rol del usuario"
+                    },
+                    "series": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Serie"
+                        },
+                        "description": "El conjunto de series asociadas al usuario"
+                    },
+                    "imgPath": {
+                        "type": "string",
+                        "description": "El nombre del archivo de imagen del usuario"
+                    }
+                }
+            },
+            "PostSerieDTO": {
+                "type": "object",
+                "properties": {
+                    "descr": {
+                        "type": "string",
+                        "description": "La descripción de la serie."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre de la serie."
+                    },
+                    "search": {
+                        "type": "string",
+                        "description": "El término de búsqueda de la serie."
+                    },
+                    "img": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "El archivo de imagen de la serie."
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        },
+                        "description": "El conjunto de identificadores de categorías asociadas."
+                    }
+                },
+                "required": ["descr", "name", "search", "img", "categories"],
+                "title": "PostSerieDTO"
+            },
+            "Serie": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "El ID de la serie"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre de la serie"
+                    },
+                    "descr": {
+                        "type": "string",
+                        "description": "La descripción de la serie"
+                    },
+                    "imgPath": {
+                        "type": "string",
+                        "description": "El nombre del archivo de imagen de la serie"
+                    },
+                    "releaseDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "La fecha de lanzamiento de la serie"
+                    },
+                    "finishDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "La fecha de finalización de la serie"
+                    },
+                    "search": {
+                        "type": "string",
+                        "description": "Texto de búsqueda relacionado con la serie"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
+                        },
+                        "description": "El conjunto de categorías asociadas a la serie"
+                    }
+                }
+            },
+            "Category": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "format": "int64",
+                        "description": "El ID de la categoría"
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre de la categoría"
+                    },
+                    "search": {
+                        "type": "string",
+                        "description": "Texto de búsqueda relacionado con la categoría"
+                    }
+                }
+            },
+            "MessageDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "El identificador único del mensaje."
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/GetUserDTO",
+                        "description": "Los datos del usuario que envió el mensaje."
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "El contenido del mensaje."
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "La fecha y hora en que se creó el mensaje."
+                    },
+                    "imgPath": {
+                        "type": "string",
+                        "description": "La ruta de la imagen adjunta al mensaje.",
+                        "nullable": true
+                    },
+                    "room": {
+                        "type": "integer",
+                        "description": "El identificador de la sala de chat a la que pertenece el mensaje."
+                    }
+                },
+                "required": ["id", "user", "message", "createdAt", "room"],
+                "title": "MessageDTO"
+            },
+            "NewPassword": {
+                "type": "object",
+                "properties": {
+                    "password": {
+                        "type": "string",
+                        "description": "La contraseña actual del usuario."
+                    },
+                    "newPassword": {
+                        "type": "string",
+                        "description": "La nueva contraseña que se desea establecer."
+                    },
+                    "confirmPassword": {
+                        "type": "string",
+                        "description": "La confirmación de la nueva contraseña."
+                    }
+                },
+                "required": ["password", "newPassword", "confirmPassword"],
+                "title": "NewPassword"
+            },
+            "PostUserDTO": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre del usuario.",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "El correo electrónico del usuario.",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "La contraseña del usuario.",
+                        "example": "password123"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "El número de teléfono del usuario.",
+                        "example": "+1234567890"
+                    },
+                    "rol": {
+                        "type": "integer",
+                        "description": "El rol del usuario.",
+                        "example": 0
+                    }
+                }
+            }
+
+            ,
+            "GetUserDTO": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "El identificador único del usuario."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre del usuario.",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "La dirección de correo electrónico del usuario.",
+                        "example": "john@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "El número de teléfono del usuario.",
+                        "example": "123456789"
+                    },
+                    "rol": {
+                        "type": "integer",
+                        "description": "El rol del usuario."
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "description": "La fecha y hora en que se creó el usuario.",
+                        "example": "2024-04-08"
+                    },
+                    "dischargeDate": {
+                        "type": "string",
+                        "description": "La fecha de baja del usuario.",
+                        "nullable": true
+                    },
+                    "imgPath": {
+                        "type": "string",
+                        "description": "La ruta de la imagen del usuario.",
+                        "example": "default.png"
+                    }
+                },
+                "required": ["id", "name", "email", "phone"],
+                "title": "GetUserDTO"
+            }
+
+            ,
+            "NewUser": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre del nuevo usuario",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "description": "El correo electrónico del nuevo usuario",
+                        "example": "john@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "description": "La contraseña del nuevo usuario",
+                        "example": "secretpassword"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "description": "El número de teléfono del nuevo usuario",
+                        "example": "123456789"
+                    },
+                    "remember": {
+                        "type": "boolean",
+                        "description": "Indica si se debe recordar la sesión del nuevo usuario",
+                        "example": true
+                    }
+                },
+                "required": ["name", "email", "password", "phone"],
+                "title": "NewUserDTO"
+            },
+            "Episode": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "El identificador único del episodio."
+                    },
+                    "name": {
+                        "type": "string",
+                        "description": "El nombre del episodio."
+                    },
+                    "fullname": {
+                        "type": "string",
+                        "description": "El nombre completo del episodio."
+                    },
+                    "imgPath": {
+                        "type": "string",
+                        "description": "La ruta de la imagen del episodio."
+                    },
+                    "episodeNumber": {
+                        "type": "integer",
+                        "description": "El número de episodio."
+                    },
+                    "videoPath": {
+                        "type": "string",
+                        "description": "La ruta del video del episodio."
+                    },
+                    "releaseDate": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "La fecha de lanzamiento del episodio (en formato 'YYYY-MM-DD')."
+                    },
+                    "serie": {
+                        "$ref": "#/components/schemas/Serie",
+                        "description": "La serie a la que pertenece este episodio."
+                    }
+                },
+                "required": ["name", "fullname", "episodeNumber", "serie"],
+                "title": "Episode"
+            },
+            "WishListDTO": {
+                "type": "object",
+                "properties": {
+                    "userId": {
+                        "type": "string",
+                        "description": "El ID del usuario."
+                    },
+                    "serieId": {
+                        "type": "string",
+                        "description": "El ID de la serie."
+                    }
+                }
+            }
+
+
+        }
+    }
+}

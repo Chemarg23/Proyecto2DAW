@@ -76,19 +76,19 @@ public class ChatController {
     /**
      * Maneja la subida de archivos de imágenes al servidor.
      * 
-     * @param imgPath Archivo de imagen a subir.
+     * @param img Archivo de imagen a subir.
      * @return ResponseEntity con el nombre del archivo subido y el estado de la respuesta.
      */
     @PostMapping
-    public ResponseEntity<String> getMessages(
-            @RequestParam("imgPath") MultipartFile imgPath) {
+    public ResponseEntity<String> saveImg(
+            @RequestParam("img") MultipartFile img) {
         try {
-            String originalFilename = imgPath.getOriginalFilename();
+            String originalFilename = img.getOriginalFilename();
             String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
             String fileName = Utils.generateRandomString(40) +UUID.randomUUID().toString()+ extension;
 
             Path path = Paths.get(UPLOAD_DIR + "/" + fileName);
-            Files.copy(imgPath.getInputStream(), path);
+            Files.copy(img.getInputStream(), path);
 
             return ResponseEntity.ok(fileName);
         } catch (Exception e) {

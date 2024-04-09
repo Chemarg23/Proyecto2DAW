@@ -19,7 +19,7 @@ public class StreamServiceImpl implements StreamService{
     private ResourceLoader resourceLoader;
 
     // Rutas de los archivos multimedia, aun he de encontrar un sitio
-    public static final String VIDEO_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/content/%s.mp4";
+    public static final String VIDEO_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/content/%s";
     public static final String SERIE_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/series/%s";
     public static final String USER_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/users/%s";
 

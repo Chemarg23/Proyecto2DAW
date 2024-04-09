@@ -34,6 +34,7 @@ export default function LoginPage() {
       .then((response) => {
         const data = {...response.data, date: Date.now()};
         dispatch(addUser(data));
+        localStorage.setItem('user',JSON.stringify(response.data))
         navigate("/main") 
       })
       .catch((err) => {
@@ -41,6 +42,7 @@ export default function LoginPage() {
         status === 422 && setErrors(err.response.data);
         status === 404 && setErrors({ email: "Este email no esta registrado" });
         status === 401 && setErrors({ password: "La contraseña no coincide" });
+        
       });
   };
   return (
@@ -54,6 +56,7 @@ export default function LoginPage() {
                 initialValues={{
                   email: "",
                   password: "",
+                  remember: false
                 }}
                 validationSchema={SignupSchema}
                 onSubmit={(values, { setErrors }) => handle(values, setErrors)}

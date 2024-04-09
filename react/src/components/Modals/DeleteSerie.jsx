@@ -1,21 +1,27 @@
 import { Button } from "@material-tailwind/react";
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SerieService from "../../services/SerieService";
+import { removeFromList } from "../../store/userSlice";
 
 export default function DeleteSerie({ serie, setState }) {
   const service = new SerieService();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
   const deleteSerie = () => {
     service
       .delete(serie.id)
-      .then(() => navigate("/main"))
+      .then(() =>{
+        dispatch(removeFromList(serie))
+        navigate("/main")})
       .catch((err) => console.log(err));
   };
 
   return (
     <>
-      <div className="z-50 fixed top-[35%] left-[50%]  transform translate-x-[-50%] bg-white dark:bg-gray-950 dark:text-white px-10 py-10 rounded-xl shadow-md md:w-[400px] lg:w-[500px] xl:w-[600px]">
+    <div className="w-[500%] h-[530%] z-50 fixed bg-white opacity-25  -translate-x-[4%] -translate-y-[90%]" style={{ zIndex: 900 }}></div>
+      <div className="z-50 fixed top-[35%] left-[50%]  transform translate-x-[-50%] bg-white dark:bg-gray-950 dark:text-white px-10 py-10 rounded-xl shadow-md sm:w-[500px]  xl:w-[600px]" style={{ zIndex:1000 }}>
         <p
           onClick={() => setState(false)}
           className="absolute top-3 right-5 dark:text-white dark:hover:bg-gray-700 rounded-full py-1 px-3 cursor-pointer"

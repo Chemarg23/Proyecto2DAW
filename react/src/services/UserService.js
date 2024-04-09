@@ -1,9 +1,8 @@
 import Service from "./Service";
 
 export default class UserService extends Service {
-
-  constructor(){
-    super('users'); 
+  constructor() {
+    super("users");
   }
 
   async getUser(id) {
@@ -17,7 +16,7 @@ export default class UserService extends Service {
   }
 
   async add(userData) {
-    const response = await this.api.post('', userData);
+    const response = await this.api.post("", userData);
     return response.data;
   }
 
@@ -29,6 +28,4 @@ export default class UserService extends Service {
   async delete(id) {
     await this.api.delete(`/${id}`);
   }
-
-  
 }

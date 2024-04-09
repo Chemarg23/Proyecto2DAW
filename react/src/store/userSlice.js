@@ -64,6 +64,7 @@ export const userSlice = createSlice({
       state.dischargeDate = "";
       state.series = [];
       state.imgPath = "";
+      localStorage.removeItem("user")
     },
     addToList(state, action) {
       state.series.unshift(action.payload);
@@ -74,10 +75,11 @@ export const userSlice = createSlice({
         (serie) => serie.id !== action.payload.id
       );
       service.delete(state.id, action.payload.id);
-    },
+    }
+  
   },
 });
 
-export const { addUser, clear, addToList, removeFromList, updateUser } = userSlice.actions;
+export const { addUser, clear, addToList, removeFromList, updateUser, updateList } = userSlice.actions;
 
 export default userSlice.reducer;
