@@ -1,6 +1,9 @@
+import { configureStore } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import WishListService from "../services/WishListService";
+
 const service = new WishListService();
+
 export const userSlice = createSlice({
   name: "user",
   initialState: {
@@ -76,10 +79,18 @@ export const userSlice = createSlice({
       );
       service.delete(state.id, action.payload.id);
     }
-  
   },
 });
 
-export const { addUser, clear, addToList, removeFromList, updateUser, updateList } = userSlice.actions;
+export const { addUser, clear, addToList, removeFromList, updateUser } = userSlice.actions;
 
-export default userSlice.reducer;
+export const store = configureStore({
+  reducer: {
+    user: userSlice.reducer,
+  }
+});
+
+store.subscribe(() => {
+  const userState = store.getState().user;
+  localStorage.setItem("user", JSON.stringify(userState));
+});

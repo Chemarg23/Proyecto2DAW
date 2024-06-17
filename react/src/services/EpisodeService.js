@@ -8,7 +8,7 @@ export default class EpisodeService extends Service {
 
   
   async getEpisodes(id){
-    return this.api.get(`/episodes/${id}`);
+    return this.api.get(`/${id}`);
   }
   
   async getByName(id) {
@@ -22,8 +22,8 @@ export default class EpisodeService extends Service {
 
   async add(data, serieId) {
     const formData = new FormData()
-    formData.append("name", data.name.replace(/ /g,"-"))
-    formData.append("fullname", data.name)
+    formData.append("fullname", data.name.replace(/ /g,"_"))
+    formData.append("name", data.name)
     formData.append("video", data.video)
     formData.append("img", data.img ? data.img : null)
     formData.append("episode_number", data.episode_number)
@@ -38,8 +38,8 @@ export default class EpisodeService extends Service {
 
   async update(id,data ) {
     const formData = new FormData()
-    formData.append("name", data.name.replace(/ /g,"-"))
-    formData.append("fullname", data.name)
+    formData.append("fullname", data.name.replace(/ /g,"_"))
+    formData.append("name", data.name)
     formData.append("video", data.video ? data.video : null)
     formData.append("img", data.img ? data.img : null)
     formData.append("episode_number", data.episode_number)
@@ -49,5 +49,9 @@ export default class EpisodeService extends Service {
 
   async delete(id) {
    return this.api.delete(`/${id}`);
+  }
+
+  async getRecommendedEpisodes(id) {
+    return this.api.get(`/recommended/${id}`);
   }
 }

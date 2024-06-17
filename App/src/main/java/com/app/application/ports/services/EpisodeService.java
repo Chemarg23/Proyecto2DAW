@@ -18,6 +18,7 @@ public interface EpisodeService {
      */
     public List<Episode> getAll();
 
+    public Episode getByFullName(String name);
     /**
      * Busca un episodio por su nombre.
      * 
@@ -37,4 +38,6 @@ public interface EpisodeService {
     public Episode createOrUpdate(EpisodeDTO dto, Long id) throws IOException;
 
     public void delete(Long id);
+
+    public List<Episode> getRecommendedEpisodes(Long id);
 }

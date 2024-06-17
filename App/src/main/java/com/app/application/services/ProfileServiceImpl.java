@@ -35,7 +35,7 @@ public class ProfileServiceImpl implements ProfileService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper = new ModelMapper();
-    private final String UPLOAD_DIR = "C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/users";
+    private final String UPLOAD_DIR = "/tmp/users";
 
     /**
      * Actualiza el perfil de un usuario.

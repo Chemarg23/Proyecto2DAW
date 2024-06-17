@@ -3,7 +3,6 @@ import { Form, Formik } from "formik";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import Header from "../Layouts/AdminHeader";
 import "../assets/login.css";
 import InputCheck from "../components/InputCheck";
 import InputText from "../components/InputText";
@@ -38,7 +37,7 @@ export default function LoginPage() {
         navigate("/main") 
       })
       .catch((err) => {
-        const status = err.response.status;
+        const status = err.response.data.status;
         status === 422 && setErrors(err.response.data);
         status === 404 && setErrors({ email: "Este email no esta registrado" });
         status === 401 && setErrors({ password: "La contraseña no coincide" });
@@ -47,7 +46,6 @@ export default function LoginPage() {
   };
   return (
     <>
-      <Header />
       <div className="font-[sans-serif] bg-gray-50 text-[#333] dark:bg-gray-800 dark:text-white">
         <div className="min-h-screen flex flex-col items-center justify-center ">
           <div className="grid md:grid-cols-2 items-center  max-w-6xl w-full p-4 m-4 shadow-2xl dark:shadow-purple-950 rounded-md dark:bg-gray-900 bg-white sm:align-middle sm:justify-center sm:h-screen">
@@ -144,7 +142,7 @@ export default function LoginPage() {
             </div>
             <div className="md:h-[110%] w-[100%] max-md:mt-10 bg-transparent rounded-xl lg:p-12 p-8 mr-28 sm:hidden md:flex">
               <img
-                src="../../public/image.jpg"
+                src="image.jpg"
                 className="w-full h-full rounded-xl "
                 height="20%"
                 alt="login-image"

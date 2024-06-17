@@ -45,6 +45,6 @@ public class NewUserDTO {
     /**
      * Indica si se debe recordar la sesión del nuevo usuario.
      */
-    private Boolean remember;
+    private Boolean remember = false;
 }
 

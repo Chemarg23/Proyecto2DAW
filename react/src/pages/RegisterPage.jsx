@@ -38,6 +38,7 @@ export default function LoginPage() {
       })
       .catch((err) => {
         const status = err.response.status;
+        console.log(err)
         status === 422 && setErrors(err.response.data);
         status === 409 && setErrors({ email: "Este email ya ha sido tomado" });
       });

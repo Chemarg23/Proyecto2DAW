@@ -48,9 +48,9 @@ const passwordSchema = Yup.object().shape({
 });
 
 export default function ProfilePage() {
-  const [loading, setLoader] = useState(false)
+  const [loading, setLoader] = useState(false);
   const user = useSelector((state) => state.user);
-  const [defaultValue,setDefault]= useState(user)
+  const [defaultValue, setDefault] = useState(user);
   const profileService = new ProfileService();
   const dispatch = useDispatch();
   const [img, setImg] = useState("");
@@ -60,7 +60,7 @@ export default function ProfilePage() {
     profileService
       .update(user.id, data)
       .then((response) => {
-        setDefault(response.data)
+        setDefault(response.data);
         toast.success("Actualizado!", {
           theme: document.querySelector("html").classList.contains("dark")
             ? "dark"
@@ -70,11 +70,11 @@ export default function ProfilePage() {
           closeOnClick: true,
           draggable: true,
         });
-        setLoader(false)
+        setLoader(false);
         dispatch(updateUser(response.data));
       })
       .catch((error) => {
-        setLoader(false)
+        setLoader(false);
         const status = error.response.status;
         status === 409 && setErrors({ email: "Este email ya ha sido tomado" });
         status === 404 && setErrors({ email: "Este usuario no existe" });
@@ -128,83 +128,91 @@ export default function ProfilePage() {
             email: defaultValue.email,
           }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setErrors, resetForm }) =>{
-            setLoader(true)
-            updateProfile(values, setErrors, resetForm)}
-          }
+          onSubmit={(values, { setErrors, resetForm }) => {
+            setLoader(true);
+            updateProfile(values, setErrors, resetForm);
+          }}
         >
           {({ setFieldValue, errors }) => (
             <Form>
-            <h1 className="w-full dark:text-white text-4xl font-bold text-center mb-10">
-              Hola {user.name}! Cambia tu perfil aquí
-            </h1>
-            <div className="text-center mb-7">
-              <label htmlFor="imgPath" className="rounded-full">
-                <img
-                  src={img !== "" ? img : `${baseUrl}stream/img/user/${user.imgPath}`}
-                  alt=""
-                  className="rounded-full md:w-64 w-44 md:h-64 h-44 cursor-pointer mx-auto"
-                />
-                <Field name="imgPath" className="hidden"></Field>
-                <input
-                  id="imgPath"
-                  name="imgPath"
-                  type="file"
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.currentTarget.files[0];
-                    setFieldValue("imgPath", file);
-                    ["image/jpeg", "image/jpg", "image/png"].includes(file.type) &&
-                      setImg(URL.createObjectURL(file));
-                  }}
-                />
-              </label>
-            </div>
-            <div className="grid md:grid-cols-2 gap-6">
-              {errors.imgPath && (
-                <div className="col-span-2 text-center justify-center text-red-600 flex">
-                  <span className="mt-1.5 me-2">
-                    <ExclamationIcon />
-                  </span>
-                  La imagen debe ser jpg, png o jpeg
+              <h1 className="w-full dark:text-white text-4xl font-bold text-center mb-10">
+                Hola {user.name}! Cambia tu perfil aquí
+              </h1>
+              <div className="text-center mb-7">
+                <label htmlFor="imgPath" className="rounded-full">
+                  <img
+                    src={
+                      img !== ""
+                        ? img
+                        : !user?.imgPath.includes("default.png")
+                        ? `${baseUrl}stream/img/user/${user?.imgPath}`
+                        : "https://thumbs.dreamstime.com/b/línea-icono-del-negro-avatar-perfil-de-usuario-121102131.jpg"
+                    }
+                    alt=""
+                    className="rounded-full md:w-64 w-44 md:h-64 h-44 cursor-pointer mx-auto"
+                  />
+                  <Field name="imgPath" className="hidden"></Field>
+                  <input
+                    id="imgPath"
+                    name="imgPath"
+                    type="file"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.currentTarget.files[0];
+                      setFieldValue("imgPath", file);
+                      ["image/jpeg", "image/jpg", "image/png"].includes(
+                        file.type
+                      ) && setImg(URL.createObjectURL(file));
+                    }}
+                  />
+                </label>
+              </div>
+              <div className="grid md:grid-cols-2 gap-6">
+                {errors.imgPath && (
+                  <div className="col-span-2 text-center justify-center text-red-600 flex">
+                    <span className="mt-1.5 me-2">
+                      <ExclamationIcon />
+                    </span>
+                    La imagen debe ser jpg, png o jpeg
+                  </div>
+                )}
+                <div className="md:col-span-1 col-span-2">
+                  <InputText
+                    label="Nombre"
+                    placeholder="Nombre..."
+                    icon="user"
+                    name="name"
+                  />
                 </div>
-              )}
-              <div className="md:col-span-1 col-span-2">
-                <InputText
-                  label="Nombre"
-                  placeholder="Nombre..."
-                  icon="user"
-                  name="name"
-                />
+                <div className="md:col-span-1 col-span-2">
+                  <InputText
+                    label="Teléfono"
+                    placeholder="Teléfono..."
+                    icon="phone"
+                    name="phone"
+                  />
+                </div>
+                <div className="col-span-2">
+                  <InputText
+                    label="Email"
+                    placeholder="example@example.com..."
+                    icon="envelope"
+                    name="email"
+                  />
+                </div>
+                <div className="col-span-2 justify-center text-center w-full py-5">
+                  <Button
+                    type="submit"
+                    className="w-[60%] shadow-xl py-2.5 px-4 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700  focus:outline-none dark:bg-purple-600 dark:hover:bg-purple-700"
+                  >
+                    {loading && (
+                      <i className="fa-solid fa-spinner fa-spin me-3"></i>
+                    )}
+                    Actualizar
+                  </Button>
+                </div>
               </div>
-              <div className="md:col-span-1 col-span-2">
-                <InputText
-                  label="Teléfono"
-                  placeholder="Teléfono..."
-                  icon="phone"
-                  name="phone"
-                />
-              </div>
-              <div className="col-span-2">
-                <InputText
-                  label="Email"
-                  placeholder="example@example.com..."
-                  icon="envelope"
-                  name="email"
-                />
-              </div>
-              <div className="col-span-2 justify-center text-center w-full py-5">
-                <Button
-                  type="submit"
-                  className="w-[60%] shadow-xl py-2.5 px-4 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700  focus:outline-none dark:bg-purple-600 dark:hover:bg-purple-700"
-                >
-                  {loading && <i className="fa-solid fa-spinner fa-spin me-3"></i>}
-                  Actualizar
-                </Button>
-              </div>
-            </div>
-          </Form>
-          
+            </Form>
           )}
         </Formik>
         <hr className="w-full dark:border-white h-6 opacity-35 my-10" />

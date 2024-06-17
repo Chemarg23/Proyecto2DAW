@@ -37,7 +37,7 @@ export default function UpdateSerie({ serie, setSerie, setState }) {
         history.pushState(
           null,
           null,
-          `/serie/${response.search.replace(/ /g, "-")}`
+          `/serie/${response.search.replace(/ /g, "_")}`
         );
         dispatch(removeFromList(serie))
         dispatch(addToList(response))

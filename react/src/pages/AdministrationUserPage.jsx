@@ -5,6 +5,7 @@ import ConfirmDischargeModal from "../components/Modals/ConfirmDischargeModal";
 import DeleteUserModal from "../components/Modals/DeleteUserModal";
 import GuestHeader from "../Layouts/GuestHeader";
 import UserService from "../services/UserService";
+
 export default function AdministrationUserPage() {
   const columns = [
     "Id",
@@ -24,6 +25,7 @@ export default function AdministrationUserPage() {
   const [dischargeModal, setDischargeModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [addModal, setAddModal] = useState(false);
+  
   const filteredData = useMemo(() => {
     const finalData = users.filter(
       (item) =>

@@ -13,17 +13,16 @@ import reactor.core.publisher.Mono;
  * Servicio para recuperar contenido multimedia y portadas de series.
  */
 @Service
-public class StreamServiceImpl implements StreamService{
+public class StreamServiceImpl implements StreamService {
 
     @Autowired
     private ResourceLoader resourceLoader;
 
     // Rutas de los archivos multimedia, aun he de encontrar un sitio
-    public static final String VIDEO_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/content/%s";
-    public static final String SERIE_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/series/%s";
-    public static final String USER_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/users/%s";
-
-    public static final String CHAT_PATH = "file:///C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/chat/%s";
+    public static final String VIDEO_PATH = "file:/tmp/content/%s";
+    public static final String SERIE_PATH = "file:/tmp/series/%s";
+    public static final String USER_PATH = "file:/tmp/users/%s";
+    public static final String CHAT_PATH = "file:/tmp/chat/%s";
 
     /**
      * Recupera el recurso de video correspondiente al título especificado.
@@ -58,7 +57,7 @@ public class StreamServiceImpl implements StreamService{
         return Mono.fromSupplier(() -> resourceLoader.getResource(String.format(USER_PATH, title)));
     }
 
-     /**
+    /**
      * Recupera el recurso de imagen de portada de serie correspondiente al título
      * especificado.
      * 

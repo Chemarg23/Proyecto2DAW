@@ -33,6 +33,6 @@ public class Credentials {
     /**
      * Indica si se debe recordar la sesión del usuario.
      */
-    private Boolean remember;
+    private Boolean remember = false;
 }
 

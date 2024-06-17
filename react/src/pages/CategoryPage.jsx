@@ -4,26 +4,28 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import SerieDisplay from "../components/SerieDisplay";
 import GuestHeader from "../Layouts/GuestHeader";
 import SerieService from "../services/SerieService";
+
+
 export default function SearchPage() {
   const navigate = useNavigate();
   const { name, page } = useParams();
-
   document.title = `Buscar - ${name}`;
   const [series, setSeries] = useState([]);
   const [pages, setPages] = useState(0);
   const [error, setError] = useState();
-  const [category, setCategory] = useState({})
   const service = new SerieService();
+  
   const fetchSeries = () => {
     service
       .searchByCategory(name, page ? page : 1)
       .then((response) => {
         setSeries(response.data.series);
         setPages(response.data.totalPages);
-        setCategory(response.data.category)
+        setError('')
       })
       .catch((err) => {
         const status = err.response.status;
+        setSeries([])
         status === 404 &&
           setError("No se encontraron series con un nombre como " + name);
       });
@@ -36,11 +38,13 @@ export default function SearchPage() {
     fetchSeries();
   }, [page, name]);
 
+
+
   return (
     <div>
       <GuestHeader></GuestHeader>
       <div className="grid grid-cols-1 h-[10%] px-10 mt-10 dark:text-white">
-        <h1 className="capitalize text-5xl font-semibold mb-10">Series de {category?.name}:</h1>
+        <h1 className="capitalize text-5xl font-semibold mb-10">Series de {name}:</h1>
         {series.length > 0 && series.map((serie, index) => (
           <div key={serie.id}>
             <SerieDisplay index={index} series={series} serie={serie} />

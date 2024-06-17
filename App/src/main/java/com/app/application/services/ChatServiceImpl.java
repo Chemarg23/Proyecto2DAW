@@ -62,6 +62,7 @@ public class ChatServiceImpl extends TextWebSocketHandler {
             MessageDTO finalMessageDTO = modelMapper.map(finalMessage, MessageDTO.class);
             User user = userRepository.findById(finalMessageDTO.getUser().getId()).orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
             GetUserDTO dto = new GetUserDTO();
+            dto.setId(user.getId());
             dto.setName(user.getName());
             dto.setEmail(user.getEmail());
             dto.setImgPath(user.getImgPath());

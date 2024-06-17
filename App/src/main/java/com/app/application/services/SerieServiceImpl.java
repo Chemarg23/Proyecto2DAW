@@ -41,7 +41,7 @@ public class SerieServiceImpl implements SerieService {
 
     private final SerieRepository repo;
     private final CategoryRepository categoryRepository;
-    private final String UPLOAD_DIR = "C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/series";
+    private final String UPLOAD_DIR = "/tmp/series";
 
     /**
      * Obtiene todas las series paginadas.
@@ -150,7 +150,7 @@ public class SerieServiceImpl implements SerieService {
                 serie.setImgPath(fileName);
 
             } catch (IOException e) {
-                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error: " + e.getMessage());
+                throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Error: " + e.getMessage());
             }
         }
         try {
@@ -168,6 +168,7 @@ public class SerieServiceImpl implements SerieService {
      * @throws ResponseStatusException Si ocurre un error durante la eliminación de
      *                                 la serie.
      */
+    @Override
     public void delete(Long id) {
         Serie serie = repo.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No se encontró la serie"));

@@ -36,8 +36,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EpisodeServiceImpl implements EpisodeService {
 
-    public static final String VIDEO_PATH = "C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/content";
-    public static final String SERIE_PATH = "C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/series";
+    public static final String VIDEO_PATH = "/tmp/content";
+    public static final String SERIE_PATH = "/tmp/series";
 
     private final EpisodesRepository repo;
 
@@ -48,6 +48,7 @@ public class EpisodeServiceImpl implements EpisodeService {
      * 
      * @return Lista de todos los episodios
      */
+    @Override
     public List<Episode> getAll() {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("id").descending());
         Page<Episode> page = repo.findAll(pageable);
@@ -62,6 +63,7 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @throws ResponseStatusException si el episodio no se encuentra en la base de
      *                                 datos
      */
+    @Override
     public Episode getByName(String name) {
         var episode = repo.findByName(name);
         if (episode.isPresent()) {
@@ -70,12 +72,28 @@ public class EpisodeServiceImpl implements EpisodeService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
 
+      /**
+     * Busca un episodio por su nombre.
+     * 
+     * @param name Nombre del episodio a buscar
+     * @return El episodio con el nombre especificado
+     * @throws ResponseStatusException si el episodio no se encuentra en la base de
+     *                                 datos
+     */
+    public Episode getByFullName(String name) {
+        var episode = repo.findByFullname(name);
+        if (episode.isPresent()) {
+            return episode.get();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
     /**
      * Obtiene todos los episodios de una serie específica.
      * 
      * @param id Identificador de la serie
      * @return Lista de episodios de la serie con el identificador especificado
      */
+    @Override
     public List<Episode> getBySerie(Long id) {
         return repo.findBySerieId(id);
     }
@@ -88,6 +106,7 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @return El episodio creado o actualizado.
      * @throws ResponseStatusException Si ocurre un error durante el proceso.
      */
+    @Override
     public Episode createOrUpdate(EpisodeDTO dto, Long id) throws IOException {
         Episode episode = id != null ? getExistingEpisode(id) : createNewEpisode(dto);
         updateEpisode(episode, dto);
@@ -112,6 +131,7 @@ public class EpisodeServiceImpl implements EpisodeService {
      * @throws ResponseStatusException Si el episodio no se encuentra o si ocurre un
      *                                 error al eliminar los archivos.
      */
+    @Override
     public void delete(Long id) {
         Episode episode = repo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         try {
@@ -232,4 +252,9 @@ public class EpisodeServiceImpl implements EpisodeService {
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
         return fileName;
     }
+
+    @Override
+    public List<Episode> getRecommendedEpisodes(Long id){
+        return this.repo.findRecomendedEpisodes(id);
+    };
 }

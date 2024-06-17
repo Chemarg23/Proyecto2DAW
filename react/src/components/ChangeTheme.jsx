@@ -5,7 +5,7 @@ export default function ChangeTheme(){
   const changeTheme = () => {
     const html = document.querySelector("html");
     const theme = html.classList.value;
-    if (theme == "dark") {
+    if (theme.includes('dark')) {
       html.classList.remove("dark");
       html.classList.add("light");
       localStorage.setItem("theme", "light");

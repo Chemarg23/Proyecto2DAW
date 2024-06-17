@@ -1,6 +1,7 @@
 import { Button } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import ChatRoom from "../components/ChatRoom";
 import DeleteEpisode from "../components/Modals/DeleteEpisode";
 import UpdateEpisodeModal from "../components/Modals/UpdateEpisodeModal";
@@ -12,6 +13,7 @@ export default function VideoPage() {
   const [episode, setEpisode] = useState(false);
   const [serie, setSerie] = useState([]);
   const [allEpisodes, setAllEpisodes] = useState([]);
+  const user = useSelector((state) => state.user);
   const { name } = useParams();
   const [next, setNext] = useState();
   const [prev, setPrev] = useState();
@@ -20,16 +22,24 @@ export default function VideoPage() {
   const [showChatRoom, setShowChatRoom] = useState(true);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [recommendedEps, setRecommendedEps] = useState([]);
+  const navigate = useNavigate()
+
   useEffect(() => {
+    setShowChatRoom(false);
     const fetchData = async () => {
       try {
         const episodeResponse = await episodeService.getByName(name);
         const episodesResponse = await episodeService.getEpisodes(
           episodeResponse.data.serie.id
         );
+        const recommended = await episodeService.getRecommendedEpisodes(
+          user.id
+        );
         setEpisode(episodeResponse.data);
         setSerie(episodeResponse.data.serie);
         setAllEpisodes(episodesResponse.data);
+        setRecommendedEps(recommended.data);
         document.title = `Ver - ${episodeResponse.data.serie.name} ${episodeResponse.data.episodeNumber}`;
       } catch (error) {
         if (error.response.status == 404) {
@@ -40,7 +50,7 @@ export default function VideoPage() {
     };
     fetchData();
     return () => setShowChatRoom(false);
-  }, []);
+  }, [name]);
 
   useEffect(() => {
     if (allEpisodes.length > 0 && episode.episodeNumber > 0) {
@@ -57,11 +67,11 @@ export default function VideoPage() {
         )
       );
     }
-  }, [allEpisodes, episode]);
+  }, [allEpisodes, episode, name]);
 
   useEffect(() => {
     setShowChatRoom(true);
-  }, [episode]);
+  }, [episode, name]);
   return (
     <>
       <GuestHeader />
@@ -74,7 +84,7 @@ export default function VideoPage() {
               </h1>
               <div className="flex items-center justify-between">
                 <p className="font-bold text-3xl dark:text-white mb-5">
-                  <span className="relative left-0">{episode.fullname}</span>
+                  <span className="relative left-0">{episode.name}</span>
                 </p>
 
                 <div className="flex gap-x-4">
@@ -100,7 +110,7 @@ export default function VideoPage() {
                 <div className="text-white">
                   {episode.episodeNumber > 1 && (
                     <Link
-                      to={`/watch/${prev?.name}`}
+                      to={`/watch/${prev?.fullname}`}
                       className="bg-blue-500 dark:bg-purple-700 hover:bg-blue-600 dark:hover:bg-purple-800 rounded-lg px-3 py-2 dark:text-white mb-3 md:mb-0"
                     >
                       <i className="bi bi-arrow-left mr-2 mb-2"></i>
@@ -112,9 +122,9 @@ export default function VideoPage() {
                 <div>
                   <Link
                     to={`/serie/${serie.search}`}
-                    className="bg-blue-500 dark:bg-purple-700 hover:bg-blue-600 dark:hover:bg-purple-800 rounded-lg px-3 py-2 dark:text-white w-full"
+                    className="bg-blue-500 dark:bg-purple-700 hover:bg-blue-600 dark:hover:bg-purple-800 rounded-lg px-3 py-2 dark:text-white w-full text-white"
                   >
-                    <i className="bi bi-list mr-2"></i>
+                    <i className="bi bi-list mr-2 text-white"></i>
                     Lista de Episodios
                   </Link>
                 </div>
@@ -122,7 +132,7 @@ export default function VideoPage() {
                 <div className="text-white">
                   {episode.episodeNumber < allEpisodes.length && (
                     <Link
-                      to={`/watch/${next?.name}`}
+                      to={`/watch/${next?.fullname}`}
                       className="bg-blue-500 dark:bg-purple-700 hover:bg-blue-600 dark:hover:bg-purple-800 rounded-lg px-3 py-2 dark:text-white mt-3 md:mt-0"
                     >
                       Siguiente
@@ -131,7 +141,24 @@ export default function VideoPage() {
                   )}
                 </div>
               </div>
+              <h1 className="text-5xl dark:text-white font-bold mt-12 mb-5">Episodios que te podrían interesar</h1>
+              <hr className="w-full dark:border-white mb-12" />
 
+              <div className="grid grid-cols-4 mb-5">
+                {recommendedEps.map((ep) => (
+                  <div key={ep.id} className="text-center transition-all dark:text-white font-semibold hover:scale-110" onClick={()=>{
+                    navigate(`/watch/${ep.fullname}`)
+                    window.scrollTo(0, 0);
+                    }}>
+                    <img
+                      className="rounded-lg w-52 h-24 dark:hover:opacity-85 cursor-pointer  shadow-gray-600 shadow-lg  dark:hover:shadow-purple-500 transition-all"
+                      src={ep.imgPath != null ? `${baseUrl}stream/img/${ep.imgPath}` : `${baseUrl}stream/img/${ep.serie.imgPath}`}
+                      alt=""
+                    />
+                    <p>{ep.serie.name} - {ep.episodeNumber}</p>
+                  </div>
+                ))}
+              </div>
               {showChatRoom && <ChatRoom room={episode.id}></ChatRoom>}
             </div>
             <div className="md:w-3/12 md:block hidden mt-16 dark:text-white episode-list">
@@ -142,7 +169,7 @@ export default function VideoPage() {
               {allEpisodes &&
                 allEpisodes.map((ep) => (
                   <Link
-                    to={`/watch/${ep.name}`}
+                    to={`/watch/${ep.fullname}`}
                     className={
                       ep.episodeNumber === episode.episodeNumber
                         ? "dark:bg-gray-700 bg-gray-200 cursor-default p-2 rounded-xl scale-[90%] grid grid-cols-3 gap-1 mt-2 "
@@ -161,7 +188,7 @@ export default function VideoPage() {
                     </div>
                     <div className="text-lg font-semibold dark:text-white">
                       <br />
-                      {serie.name}
+                      {serie.fullname}
                       <p>Capítulo {ep.episodeNumber}</p>
                     </div>
                   </Link>

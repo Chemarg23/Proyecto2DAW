@@ -10,7 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.app.application.ports.repositories.UserRepository;
 import com.app.application.ports.services.AuthService;
-import com.app.application.utils.JWTBuilder;
+import com.app.application.utils.JTWUtils;
 import com.app.domain.entity.User;
 import com.app.dto.auth.AuthenticatedUser;
 import com.app.dto.auth.Credentials;
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         return this.repo.findByEmail(credentials.getEmail()).map(user -> {
             if (passwordEncoder.matches(credentials.getPassword(), user.getPassword())) {
                 AuthenticatedUser authUser = modelMapper.map(user, AuthenticatedUser.class);
-                authUser.setToken(JWTBuilder.generateToken(user, credentials.getRemember()));
+                authUser.setToken(JTWUtils.generateToken(user, credentials.getRemember()));
                 return authUser;
             } else {
                 throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Credenciales erróneas");
@@ -72,10 +72,10 @@ public AuthenticatedUser register(NewUserDTO userData){
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         this.repo.save(newUser);
         AuthenticatedUser user = modelMapper.map(newUser, AuthenticatedUser.class);
-        user.setToken(JWTBuilder.generateToken(newUser, userData.getRemember()));
+        user.setToken(JTWUtils.generateToken(newUser, userData.getRemember()));
         return user;
     } catch(DataIntegrityViolationException e){
-        throw new ResponseStatusException(HttpStatus.CONFLICT,"Este email ya ha sido tomado");
+        throw new ResponseStatusException(HttpStatus.CONFLICT,"Este email ya ha sido tomado,  "+e.getMessage());
     }
 }
 

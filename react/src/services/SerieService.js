@@ -9,15 +9,14 @@ export default class SerieService extends Service {
     return this.api.get(`/${id}`);
   }
 
-
   async getAll(page) {
     return this.api.get(`/all/${page}`);
   }
 
   async add(data) {
-    const search = data.name.trim().replace(/\s/g, "-")
+    const search = data.name.trim().replace(/\s/g, "-");
     const catId = [];
-    data.categories.forEach(element => catId.push(element.id));
+    data.categories.forEach((element) => catId.push(element.id));
     const formData = new FormData();
     formData.append("img", data.img);
     formData.append("descr", data.descr);
@@ -33,13 +32,16 @@ export default class SerieService extends Service {
     return response.data;
   }
 
-  async update(data,id) {
-    const search = data.name.trim().replace(/\s/g, "-")
+  async update(data, id) {
+    const search = data.name.trim().replace(/\s/g, "-");
     const catId = [];
-    data.categories.forEach(element => catId.push(element.id ? element.id : element.value));
+    data.categories.forEach((element) =>
+      catId.push(element.id ? element.id : element.value)
+    );
     const formData = new FormData();
-
-    !data.img!=='' ? formData.append("img", data.img) : formData.append("img", null) ;
+    !data.img !== ""
+      ? formData.append("img", data.img)
+      : formData.append("img", null);
     formData.append("descr", data.descr.trim());
     formData.append("categories", catId);
     formData.append("name", data.name.trim());

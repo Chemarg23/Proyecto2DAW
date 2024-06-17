@@ -41,7 +41,7 @@ public class ChatController {
 
     private final ChatRepository repo;
     private final ModelMapper modelMapper;
-    private final String UPLOAD_DIR = "C:/Users/josem/OneDrive/Escritorio/react/App/src/main/files/chat";
+    private final static String UPLOAD_DIR = "/tmp/chat";
     
     /**
      * Obtiene los mensajes de una sala de chat paginados.

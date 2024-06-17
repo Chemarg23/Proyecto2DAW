@@ -10,6 +10,7 @@ import SerieService from "../services/SerieService";
 import { baseUrl } from "../services/Service";
 
 export default function SeriePage() {
+  
   const [serie, setSerie] = useState(false);
   const [episodes, setEpisodes] = useState(false);
   const service = new SerieService();
@@ -27,6 +28,7 @@ export default function SeriePage() {
       const episodesResponse = await episodeService.getEpisodes(
         serieResponse.data.id
       );
+      
       document.title = `Ver - ${serieResponse.data.name}`;
       setSerie(serieResponse.data);
       setEpisodes(episodesResponse.data);
@@ -42,7 +44,7 @@ export default function SeriePage() {
         closeOnClick: true,
         draggable: true,
       });
-  }, []);
+  }, [name]);
 
   return (
     <>
@@ -160,7 +162,7 @@ export default function SeriePage() {
                   <Link
                     key={ep.id}
                     className="hover:scale-100 w-full  scale-95 dark:text-white transition-all"
-                    to={`/watch/${ep.name}`}
+                    to={`/watch/${ep.fullname}`}
                   >
                     <img
                       src={`${baseUrl}stream/img/${
@@ -173,14 +175,7 @@ export default function SeriePage() {
                       Capítulo {ep.episodeNumber}
                     </p>
                   </Link>
-                  {user.rol && (
-                    <input
-                      type="checkbox"
-                      className="ms-[47%] w-4 h-5"
-                      name=""
-                      id=""
-                    />
-                  )}{" "}
+                  
                 </div>
               );
             })}

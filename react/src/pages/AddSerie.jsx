@@ -48,7 +48,7 @@ export default function AddSerie() {
   const add = (values,setErrors) => {
     
     serieService.add(values).then((response) => {
-      navigate("/serie/"+response.search.replace(/ /g,"-"),{state:{toast:true}})
+      navigate("/serie/"+response.search.replace(/ /g,"_"),{state:{toast:true}})
     }).catch((err) =>{
       const status = err.response.status
       status === 422 && setErrors(err.response.data);

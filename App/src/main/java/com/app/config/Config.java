@@ -23,6 +23,8 @@ public class Config implements WebMvcConfigurer{
                 .allowedMethods("*")
                 .allowedHeaders("*");
     }
+
+   
     /**
      * Bean que proporciona una instancia de ModelMapper para mapear objetos entre diferentes tipos.
      * @return Instancia de ModelMapper.

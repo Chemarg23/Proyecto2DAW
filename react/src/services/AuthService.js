@@ -1,5 +1,3 @@
-import { store } from "../store/store";
-import setToken from "../store/userSlice";
 import Service from "./Service";
 
 export default class AuthService extends Service {
@@ -9,7 +7,7 @@ export default class AuthService extends Service {
   }
 
   async login(credentials) {
-    return this.api.post(`/auth/login`, credentials);
+    return this.api.post(`/auth/login`, credentials)
   }
 
   async register(data) {
@@ -17,10 +15,6 @@ export default class AuthService extends Service {
   }
 
 
-  async refreshToken() {
-    const response = await this.api.post('/auth/refresh-token');
-    store.dispatch(setToken(response.data.token));
-  }
 
   async logout(){
 

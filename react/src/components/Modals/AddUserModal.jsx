@@ -26,6 +26,7 @@ export default function AddUserModal({ setState, user, users, setUsers }) {
       .add(data)
       .then((response) => {
         setUsers((prevUsers) => [response, ...prevUsers]);
+        setState(false)
         reset()
       })
       .catch((err) => {
@@ -36,6 +37,8 @@ export default function AddUserModal({ setState, user, users, setUsers }) {
   };
 
   return (
+    <>
+  <div className="w-screen h-screen bg-gray-400 opacity-20 absolute top-0 z-50"></div>
     <div className="z-50 w-[40%] fixed h-auto text-center transform-translateX(-50%) shadow-xl top-[15%] left-[33%] dark:bg-gray-950 bg-white dark:text-white px-10 py-10 rounded-xl dark:shadow-lg dark:shadow-purple-900">
       <p
         onClick={() => setState(false)}
@@ -128,5 +131,6 @@ export default function AddUserModal({ setState, user, users, setUsers }) {
         </Formik>
       </div>
     </div>
+    </>
   );
 }

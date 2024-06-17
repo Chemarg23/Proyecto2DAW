@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springApp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: springApp
+  template:
+    metadata:
+      labels:
+        app: springApp
+    spec:
+      containers:
+      - name: spring
+        image: spring:springApp
+        ports:
+        - containerPort: 8080
+        
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-springApp
+spec:
+  selector:
+    app: springApp
+  ports:
+  - protocol: TCP
+    port: 8888
+    targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: springApp-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: springApp
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 50

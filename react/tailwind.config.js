@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const flowbite = require("flowbite-react/tailwind");
+
 export default {
   
   content: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
@@ -29,7 +31,7 @@ export default {
       }
     }
   },
-  plugins: [],
+  plugins: [flowbite],
   fontFamily: {
     'body': [
   'Inter', 

@@ -15,10 +15,14 @@ export default function AllSeriesPage() {
 
   const service = new SerieService();
   const fetchSeries = () => {
-    service.getAll(currentPage).then((response) => {
-      setSeries(response.data.series);
-      setPages(response.data.totalPages);
-    });
+    service
+      .getAll(currentPage)
+      .then((response) => {
+        setSeries(response.data.series);
+        setPages(response.data.totalPages);
+        console.log(response);
+      })
+      .catch((err) => console.log(err));
   };
   const handlePageChange = ({ selected }) => {
     const pageNumber = parseInt(selected) + 1;
@@ -33,6 +37,7 @@ export default function AllSeriesPage() {
     <div>
       <GuestHeader></GuestHeader>
       <div className="grid grid-cols-1 h-[10%] px-10 mt-10">
+        <h1 className="text-5xl font-semibold dark:text-white">Nuestras series:</h1>
         {series.map((serie, index) => (
           <div key={serie.id}>
             <SerieDisplay index={index} series={series} serie={serie} />

@@ -16,16 +16,14 @@ export default function Message({ message }) {
   };
 
   const date = fecha.toLocaleDateString("es-ES", format);
-
   return (
     <>
       {message?.id && (
         <div className="flex items-start gap-2.5 mt-5 ">
           <img
             className="w-8 h-8 rounded-full shadow-sm shadow-black dark:shadow-purple-700"
-            src={`${baseUrl}stream/img/user/${
-              message.user?.imgPath
-            }`}
+            src={!message.user?.imgPath.includes("default.png") ? `${baseUrl}stream/img/user/${
+              message.user?.imgPath}` : "https://thumbs.dreamstime.com/b/línea-icono-del-negro-avatar-perfil-de-usuario-121102131.jpg"}
             alt="Jese image"
           />
           <div className="flex flex-col gap-2.5 w-full leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-e-xl rounded-es-xl dark:bg-gray-700 relative">
@@ -69,7 +67,6 @@ Message.propTypes = {
       createdAt: PropTypes.string.isRequired,
       user: PropTypes.shape({
         name: PropTypes.string.isRequired,
-        id: PropTypes.number.isRequired,
         imgPath: PropTypes.string,
       }).isRequired,
       message: PropTypes.string.isRequired,

@@ -14,8 +14,10 @@ export default class Service {
 
     this.api.interceptors.request.use((config) => {
       const token = store.getState().user.token;
-      token && (config.headers["Authorization"] = `Bearer ${token}`);
+      token && (config.headers["Authentication"] = `Bearer ${token}`);
+      config.headers["Access-Control-Allow-Origin"]= "*"
       return config;
     });
+    
   }
 }

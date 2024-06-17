@@ -14,8 +14,6 @@ export default function FollowButton({ serie }) {
     () => setIsInList(user.series.find(item=>item.id === serie.id)),
     []
   );
-  useEffect(() =>setIsInList(user.series.find(item=>item.id === serie.id))
-  , [user.series]);
 
   const addToStore = () => {
     dispatch(addToList(serie));

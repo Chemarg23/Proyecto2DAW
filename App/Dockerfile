@@ -1,7 +1,6 @@
-FROM openjdk:11-jre-slim
+FROM eclipse-temurin:17
 
-WORKDIR /app
 
-COPY ./target/your-spring-app.jar app.jar
+COPY target/demo-0.0.1-SNAPSHOT.jar app.jar
 
-CMD ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

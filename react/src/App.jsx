@@ -1,54 +1,29 @@
-import { useDispatch, useSelector } from "react-redux";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import AddSerie from "./pages/AddSerie";
-import AdministrationUserPage from "./pages/AdministrationUserPage";
-import AllSeriesPage from "./pages/AllSeriesPage";
-import CategoryPage from "./pages/CategoryPage";
-import LoginPage from "./pages/LoginPage";
-import MainPage from "./pages/MainPage";
-import ProfilePage from "./pages/ProfilePage";
-import RegisterPage from "./pages/RegisterPage";
-import SearchPage from "./pages/SearchPage";
-import SeriePage from "./pages/SeriePage";
-import VideoPage from "./pages/VideoPage";
-import WishListPage from "./pages/WishListPage";
-import { addUser } from "./store/userSlice";
+import { useDispatch } from "react-redux";
+import { RouterProvider } from "react-router-dom";
+import router from "./router/index";
+import { addUser } from "./store/store";
 
 const App = () => {
   const dispatch = useDispatch();
-  
- const storedUser = localStorage.getItem("user")
- storedUser && dispatch(addUser(JSON.parse(storedUser)))
-  const user = useSelector((state) => state.user);
-  document.querySelector("html").classList.add(localStorage.getItem("theme"));
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/register" Component={RegisterPage} />
-        <Route path="/login" Component={LoginPage} />
+  const storedUser = localStorage.getItem("user");
 
-        {user.name && (
-          <>
-            <Route path="main" Component={MainPage} />
-            <Route path="watch/:name" Component={VideoPage} />
-            <Route path="serie/:name" Component={SeriePage} />
-            <Route path="search/:name/:page?" Component={SearchPage} />
-            <Route path="category/:name/:page?" Component={CategoryPage} />
-            <Route path="series/:page?" Component={AllSeriesPage} />
-            <Route path="list/:page?" Component={WishListPage} />
-            <Route path="profile" Component={ProfilePage} />
-          </>
-        )}
-        {user.rol && user.auth && (
-          <>
-            <Route path="/series/create" Component={AddSerie} />
-            <Route path="/admin" Component={AdministrationUserPage} />
-          </>
-        )}
-        <Route path="*" element={<Navigate to={"/login"} />}></Route>
-      </Routes>
-    </BrowserRouter>
-  );
+  if (storedUser) {
+    try {
+      const parsedUser = JSON.parse(storedUser);
+      dispatch(addUser(parsedUser));
+    } catch (error) {
+      console.error("Error parsing stored user data:", error);
+    }
+  }
+
+  if (
+    !document.querySelector("html").classList.contains("light") &&
+    !document.querySelector("html").classList.contains("light")
+  ) {
+    document.querySelector("html").classList.add("dark");
+  }
+  document.querySelector("html").classList.add(localStorage.getItem("theme"));
+  return <RouterProvider router={router} />;
 };
 
 export default App;

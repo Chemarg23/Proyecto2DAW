@@ -7,11 +7,11 @@ export default function SerieDisplay({ index, series, serie }) {
   const navigate = useNavigate();
   return (
     <>
-      <div className="flex flex-col lg:flex-row gap-4 py-5 justify-center lg:justify-start">
+      <div  style={{ animationDelay: `${index * 0.2}s` }} className="flex flex-col lg:flex-row gap-4 py-5 justify-center lg:justify-start slide-in">
         <div className="transition-all sm:w-[450px] w-[350px] lg:w-1/4 order-1 lg:order-1 justify-center align-middle text-center">
           <img
             onClick={() => navigate(`/serie/${serie.search}`)}
-            className="h-44 cursor-pointer dark:hover:shadow-purple-500 dark:hover:shadow-md hover:shadow-2xl transition-all hover:scale-105 w-full"
+            className="h-44 cursor-pointer shadow-2xl shadow-gray-400 dark:shadow-2xl dark:shadow-transparent dark:hover:shadow-purple-500 dark:hover:shadow-md hover:shadow-2xl transition-all hover:scale-105 w-full"
             src={`${baseUrl}stream/img/${serie.imgPath}`}
           />
         </div>
@@ -74,7 +74,7 @@ export default function SerieDisplay({ index, series, serie }) {
       </div>
 
       {index < series.length - 1 && (
-        <hr className="w-full border-black dark:border-white mt-4 mb-4 opacity-15" />
+        <hr className="w-full slide-in border-black dark:border-gray-500 mt-4 mb-4 opacity-15" />
       )}
     </>
   );

@@ -29,6 +29,11 @@ export default function SearchPage() {
   return (
     <div>
       <GuestHeader></GuestHeader>
+      <div className="px-16 py-10">
+        <h1 className="text-5xl fonr-bold dark:text-white ">
+          Series que coinciden con {name}:
+        </h1>
+      </div>
       <div className="grid grid-cols-1 h-[10%] px-10 mt-10">
         {series.map((serie, index) => (
           <div key={serie.id}>

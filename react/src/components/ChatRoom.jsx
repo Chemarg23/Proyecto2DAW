@@ -33,23 +33,24 @@ export default function ChatRoom({ room }) {
 
   const sendMessage = async (text) => {
     if (text) {
-      if(file){
-      const response = await service.saveImg(file)
-      const data = JSON.stringify({
-        user: { id: user.id },
-        message: text,
-        room: room,
-        imgPath: response.data
-      })
-      setFile(null)
-      socket.send(data);
-    }else{
-      const data = JSON.stringify({
-        user: { id: user.id },
-        message: text,
-        room: room
-      })
-      socket.send(data);}
+      if (file) {
+        const response = await service.saveImg(file);
+        const data = JSON.stringify({
+          user: { id: user.id },
+          message: text,
+          room: room,
+          imgPath: response.data,
+        });
+        setFile(null);
+        socket.send(data);
+      } else {
+        const data = JSON.stringify({
+          user: { id: user.id },
+          message: text,
+          room: room,
+        });
+        socket.send(data);
+      }
     }
   };
 
@@ -62,25 +63,22 @@ export default function ChatRoom({ room }) {
   };
 
   useEffect(() => {
-  if (socket) {
+    if (socket) {
+      socket.onmessage = async (e) => {
+        const jsonMessage = JSON.parse(e.data);
+        setMessages((messages) => [jsonMessage, ...messages]);
+      };
 
-    socket.onmessage = async (e) => {
-      const jsonMessage = JSON.parse(e.data); 
-      setMessages((messages) => [jsonMessage, ...messages]);
-    };
+      socket.onerror = (error) => {
+        console.error("Error:", error);
+      };
 
-    socket.onerror = (error) => {
-      console.error("Error:", error);
-    };
+      socket.onclose = (event) => {
+        console.log("Conexión cerrada:", event.code, event.reason);
+      };
+    }
+  }, [socket, file]);
 
-    socket.onclose = (event) => {
-      console.log("Conexión cerrada:", event.code, event.reason);
-    };
-  }
-}, [socket, file]);
-
-
-  
   return (
     <>
       <h1 className="dark:text-white text-5xl font-bold">Chat a tiempo real</h1>

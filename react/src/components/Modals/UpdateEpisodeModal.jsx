@@ -38,7 +38,7 @@ export default function UpdateEpisodeModal({ setEpisode, setState, episode }) {
         setEpisode(response);
         setLoader(false);
         setState(false);
-        history.pushState({}, '', `/watch/${response.name.replace(/ /g, "-")}`);
+        history.pushState({}, '', `/watch/${response.fullname.replace(/ /g, "_")}`);
 
       })
       .catch((err) => {
@@ -64,7 +64,7 @@ export default function UpdateEpisodeModal({ setEpisode, setState, episode }) {
           initialValues={{
             img: "",
             video: "",
-            name: episode.fullname,
+            name: episode.name,
             episode_number: episode.episodeNumber,
           }}
           validationSchema={validationSchema}

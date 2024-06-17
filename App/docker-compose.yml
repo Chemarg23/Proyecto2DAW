@@ -1,0 +1,61 @@
+version: "3.3"
+services:
+  app:
+    container_name: "spring"
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:mysql://mysqldb:3306/spring
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: root
+    depends_on:
+      - mysqldb
+    volumes:
+      - C:\data\content:/tmp/content
+      - C:\data\series:/tmp/series
+      - C:\data\users:/tmp/users
+      - C:\data\chat:/tmp/chat
+    networks:
+      - net
+
+  mysqldb:
+    container_name: "mysqldb"
+    image: "mysql:5.7"
+    ports:
+      - "3306:3306"
+    volumes:
+      - C:\data\mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: spring
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - net
+    command: [
+      '--default-authentication-plugin=mysql_native_password',
+      '--bind-address=0.0.0.0'
+    ]
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysqldb
+      PMA_PORT: 3306
+    depends_on:
+      - mysqldb
+    networks:
+      - net
+
+volumes:
+  mysql-data:
+    external: false
+
+networks:
+  net:
+    driver: bridge
+    external: true

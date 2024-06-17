@@ -1,5 +1,4 @@
 import { createBrowserRouter } from "react-router-dom";
-import Display from "../components/Display";
 import AddSerie from "../pages/AddSerie";
 import AdministrationUserPage from "../pages/AdministrationUserPage";
 import AllSeriesPage from "../pages/AllSeriesPage";
@@ -12,10 +11,11 @@ import SearchPage from "../pages/SearchPage";
 import SeriePage from "../pages/SeriePage";
 import VideoPage from "../pages/VideoPage";
 import WishListPage from "../pages/WishListPage";
+
 const router = createBrowserRouter([
   {
     path: "/",
-    Component: Display,
+    Component: LoginPage,
   },
   {
     path: "/register",

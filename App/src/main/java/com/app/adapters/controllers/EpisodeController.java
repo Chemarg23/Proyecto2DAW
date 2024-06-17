@@ -3,7 +3,6 @@ package com.app.adapters.controllers;
 import java.io.IOException;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +22,8 @@ import com.app.dto.episodes.EpisodeDTO;
 import com.app.validator.ValidImage;
 import com.app.validator.ValidVideo;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Controlador para manejar las solicitudes relacionadas con los episodios de
  * una serie.
@@ -30,10 +31,10 @@ import com.app.validator.ValidVideo;
 @RestController
 @RequestMapping("/api/episodes")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class EpisodeController {
 
-    @Autowired
-    EpisodeService service;
+   private final EpisodeService service;
 
     /**
      * Devuelve todos los episodios.
@@ -53,7 +54,7 @@ public class EpisodeController {
      */
     @GetMapping("/name/{name}")
     public ResponseEntity<Episode> getByName(@PathVariable String name) {
-        return ResponseEntity.ok(service.getByName(name));
+        return ResponseEntity.ok(service.getByFullName(name));
     }
 
     /**
@@ -62,11 +63,21 @@ public class EpisodeController {
      * @param id Identificador de la serie
      * @return Lista de episodios de la serie con el identificador especificado
      */
-    @GetMapping("/episodes/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<List<Episode>> getEpisodes(@PathVariable Long id) {
         return ResponseEntity.ok(service.getBySerie(id));
     }
 
+    /**
+     * Devuelve todos los episodios de una serie específica.
+     * 
+     * @param id Identificador de la serie
+     * @return Lista de episodios de la serie con el identificador especificado
+     */
+    @GetMapping("/recommended/{id}")
+    public ResponseEntity<List<Episode>> getRecommendedEpisodes(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getRecommendedEpisodes(id));
+    }
     /**
      * Agrega un nuevo episodio.
      *
@@ -126,7 +137,7 @@ public class EpisodeController {
         dto.setName(name);
         dto.setVideo(video);
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrUpdate(dto, null));
+            return ResponseEntity.status(HttpStatus.CREATED).body(service.createOrUpdate(dto, id));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
